@@ -41,25 +41,25 @@ describe Zuora::Objects::PaymentMethod do
         Factory.create(:payment_method_credit_card, :account => @account)
 
         xml = Zuora::Api.instance.last_request
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:Type').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Type").
           with_value('CreditCard')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:CreditCardAddress1').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardAddress1").
           with_value('123 Testing Lane')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:CreditCardCity').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardCity").
           with_value('San Francisco')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:CreditCardState').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardState").
           with_value('California')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:CreditCardPostalCode').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardPostalCode").
           with_value('95611')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:CreditCardHolderName').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardHolderName").
           with_value('Example User')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:CreditCardNumber').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardNumber").
           with_value('4111111111111111')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:CreditCardType').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardType").
           with_value('Visa')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:CreditCardExpirationMonth').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardExpirationMonth").
           with_value('9')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:CreditCardExpirationYear').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardExpirationYear").
           with_value('2018')
       end
     end
@@ -79,17 +79,17 @@ describe Zuora::Objects::PaymentMethod do
         Factory.create(:payment_method_ach, :account => @account)
 
         xml = Zuora::Api.instance.last_request
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:Type').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Type").
           with_value('ACH')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:AchAbaCode').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AchAbaCode").
           with_value('123456789')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:AchAccountName').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AchAccountName").
           with_value('My Checking Account')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:AchBankName').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AchBankName").
           with_value('Bank of Zuora')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:AchAccountNumber').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AchAccountNumber").
           with_value('987654321')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:AchAccountType').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AchAccountType").
           with_value('BusinessChecking')
       end
     end
@@ -109,15 +109,15 @@ describe Zuora::Objects::PaymentMethod do
         Factory.create(:payment_method_paypal, :account => @account)
 
         xml = Zuora::Api.instance.last_request
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:Type').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Type").
           with_value('PayPal')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:PaypalBaid').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:PaypalBaid").
           with_value('ExampleBillingAgreementId')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:PaypalEmail').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:PaypalEmail").
           with_value('example@example.org')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:PaypalType').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:PaypalType").
           with_value('ExpressCheckout')
-        xml.should_not have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:PaypalPreapprovalKey')
+        xml.should_not have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:PaypalPreapprovalKey")
       end
     end
   end

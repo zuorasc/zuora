@@ -22,7 +22,7 @@ describe Zuora::Objects::ProductRatePlanCharge do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should have_xml('//env:Body/ins0:query/ins0:queryString').
+      xml.should have_xml("//env:Body/#{zns}:query/#{zns}:queryString").
         with_value(/select .+ from ProductRatePlanChargeTier where ProductRatePlanChargeId = 'test'/)
     end
   end
@@ -78,12 +78,12 @@ describe Zuora::Objects::ProductRatePlanCharge do
     end
 
     xml = Zuora::Api.instance.last_request
-    xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:ProductRatePlanChargeTierData')
-    xml.should have_xml('//ins2:ProductRatePlanChargeTierData/ins0:ProductRatePlanChargeTier')
-    xml.should have_xml('//ins0:ProductRatePlanChargeTier/ins2:Active').with_value(true)
-    xml.should have_xml('//ins0:ProductRatePlanChargeTier/ins2:Price').with_value(50)
-    xml.should have_xml('//ins0:ProductRatePlanChargeTier/ins2:StartingUnit').with_value(11)
-    xml.should have_xml('//ins0:ProductRatePlanChargeTier/ins2:EndingUnit').with_value(20)
+    xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:ProductRatePlanChargeTierData")
+    xml.should have_xml("//#{ons}:ProductRatePlanChargeTierData/#{zns}:ProductRatePlanChargeTier")
+    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:Active").with_value(true)
+    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:Price").with_value(50)
+    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:StartingUnit").with_value(11)
+    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:EndingUnit").with_value(20)
 
     MockResponse.responds_with(:product_rate_plan_charge_tier_find_success) do
       @prpct = @prpc.product_rate_plan_charge_tiers
@@ -100,21 +100,21 @@ describe Zuora::Objects::ProductRatePlanCharge do
     end
 
     xml = Zuora::Api.instance.last_request
-    xml.should have_xml('//env:Body/ins0:update/ins0:zObjects/ins2:ProductRatePlanChargeTierData')
-    xml.should have_xml('//env:Body/ins0:update/ins0:zObjects/ins2:Id')
-    xml.should have_xml('//ins2:ProductRatePlanChargeTierData/ins0:ProductRatePlanChargeTier')
-    xml.should have_xml('//ins0:ProductRatePlanChargeTier/ins2:Active').with_value(true)
-    xml.should have_xml('//ins0:ProductRatePlanChargeTier/ins2:Price').with_value(20)
-    xml.should_not have_xml('//ins0:ProductRatePlanChargeTier/ins0:Id')
-    xml.should_not have_xml('//ins0:ProductRatePlanChargeTier/ins2:StartingUnit')
-    xml.should_not have_xml('//ins0:ProductRatePlanChargeTier/ins2:EndingUnit')
+    xml.should have_xml("//env:Body/#{zns}:update/#{zns}:zObjects/#{ons}:ProductRatePlanChargeTierData")
+    xml.should have_xml("//env:Body/#{zns}:update/#{zns}:zObjects/#{ons}:Id")
+    xml.should have_xml("//#{ons}:ProductRatePlanChargeTierData/#{zns}:ProductRatePlanChargeTier")
+    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:Active").with_value(true)
+    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:Price").with_value(20)
+    xml.should_not have_xml("//#{zns}:ProductRatePlanChargeTier/#{zns}:Id")
+    xml.should_not have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:StartingUnit")
+    xml.should_not have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:EndingUnit")
     
     MockResponse.responds_with(:product_rate_plan_charge_destroy_success) do
       @prpc.destroy
     end
 
     xml = Zuora::Api.instance.last_request
-    xml.should have_xml('//env:Body/ins0:delete/ins0:type').with_value('ProductRatePlanCharge')
-    xml.should have_xml('//env:Body/ins0:delete/ins0:ids').with_value('4028e48834aa10a30134aaf7f40b3139')
+    xml.should have_xml("//env:Body/#{zns}:delete/#{zns}:type").with_value('ProductRatePlanCharge')
+    xml.should have_xml("//env:Body/#{zns}:delete/#{zns}:ids").with_value('4028e48834aa10a30134aaf7f40b3139')
   end
 end

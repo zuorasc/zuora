@@ -71,7 +71,7 @@ describe Zuora::Objects::Account do
         account.name.should == 'FooBar'
 
         xml = Zuora::Api.instance.last_request
-        xml.should have_xml('//env:Body/ins0:query/ins0:queryString').
+        xml.should have_xml("//env:Body/#{zns}:query/#{zns}:queryString").
           with_value(/select .+ from Account where Id = '4028e488348752ce0134876a25867cb2'/)
       end
     end
@@ -80,7 +80,8 @@ describe Zuora::Objects::Account do
       MockResponse.responds_with(:account_find_success) do
         Zuora::Objects::Account.where(:id => 'test', :name => 'Bob')
         xml = Zuora::Api.instance.last_request
-        xml.should have_xml('//env:Body/ins0:query/ins0:queryString').
+        ns = zuora_namespace('http://api.zuora.com/')
+        xml.should have_xml("//env:Body/#{zns}:query/#{zns}:queryString").
           with_value(/select .+ from Account where Id = 'test' and Name = 'Bob'/)
       end
     end
@@ -104,9 +105,10 @@ describe Zuora::Objects::Account do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should have_xml('//env:Body/ins0:update/ins0:zObjects/ins2:Id').
+      zns = zuora_namespace('http://api.zuora.com/')
+      xml.should have_xml("//env:Body/#{zns}:update/#{zns}:zObjects/#{ons}:Id").
         with_value('4028e488348752ce0134876a25867cb2')
-      xml.should have_xml('//env:Body/ins0:update/ins0:zObjects/ins2:Name').
+      xml.should have_xml("//env:Body/#{zns}:update/#{zns}:zObjects/#{ons}:Name").
         with_value('FooMax')
     end
   end
@@ -123,19 +125,19 @@ describe Zuora::Objects::Account do
         a.id.should == '4028e4873491cc7701349574bfcb6af6'
 
         xml = Zuora::Api.instance.last_request
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:Name').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Name").
           with_value('Example Test Account')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:Batch').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Batch").
           with_value('Batch1')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:AutoPay').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AutoPay").
           with_value('false')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:BillCycleDay').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:BillCycleDay").
           with_value('1')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:Currency').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Currency").
           with_value('USD')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:PaymentTerm').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:PaymentTerm").
           with_value('Due Upon Receipt')
-        xml.should have_xml('//env:Body/ins0:create/ins0:zObjects/ins2:Status').
+        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Status").
           with_value('Draft')
       end
     end
@@ -168,9 +170,9 @@ describe Zuora::Objects::Account do
         a.destroy.should == true
 
         xml = Zuora::Api.instance.last_request
-        xml.should have_xml('//env:Body/ins0:delete/ins0:type').
+        xml.should have_xml("//env:Body/#{zns}:delete/#{zns}:type").
           with_value('Account')
-        xml.should have_xml('//env:Body/ins0:delete/ins0:ids').
+        xml.should have_xml("//env:Body/#{zns}:delete/#{zns}:ids").
           with_value(id)
       end
     end
@@ -184,7 +186,7 @@ describe Zuora::Objects::Account do
         accounts.map(&:id).sort.should == ['4028e4883491c509013492cd13e2455f','4028e488348752ce0134876a25867cb2'].sort
 
         xml = Zuora::Api.instance.last_request
-        xml.should have_xml('//env:Body/ins0:query/ins0:queryString').
+        xml.should have_xml("//env:Body/#{zns}:query/#{zns}:queryString").
           with_value(/select .+ from Account where AccountNumber like 'test%'/)
       end
     end
@@ -204,7 +206,7 @@ describe Zuora::Objects::Account do
         contact = contacts.first
 
         xml = Zuora::Api.instance.last_request
-        xml.should have_xml('//env:Body/ins0:query/ins0:queryString').
+        xml.should have_xml("//env:Body/#{zns}:query/#{zns}:queryString").
           with_value(/select .+ from Contact where AccountId = '4028e488348752ce0134876a25867cb2'/)
       end
 

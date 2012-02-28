@@ -38,16 +38,16 @@ describe Zuora::Objects::SubscribeRequest do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:Account/ins2:Id').
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:Account/#{ons}:Id").
         with_value('4028e488348752ce0134876a25867cb2')
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:PaymentMethod/ins2:Id').
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PaymentMethod/#{ons}:Id").
         with_value('4028e48834aa10a30134c50f40901ea7')
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:BillToContact/ins2:Id').
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:BillToContact/#{ons}:Id").
         with_value('4028e4873491cc770134972e75746e4c')
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:SubscriptionData/ins0:Subscription')
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:SubscriptionData/ins0:RatePlanData/ins0:RatePlan/ins2:ProductRatePlanId').
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscriptionData/#{zns}:Subscription")
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscriptionData/#{zns}:RatePlanData/#{zns}:RatePlan/#{ons}:ProductRatePlanId").
         with_value('4028e48834aa10a30134c50f40901ea7')
-      xml.should_not have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins2:SubscribeOptions')
+      xml.should_not have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{ons}:SubscribeOptions")
     end
 
     it "provides full account info when new object" do
@@ -59,10 +59,10 @@ describe Zuora::Objects::SubscribeRequest do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should_not have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:Account/ins2:Id')
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:Account/ins2:Name')
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:Account/ins2:Status')
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:Account/ins2:Currency')
+      xml.should_not have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:Account/#{ons}:Id")
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:Account/#{ons}:Name")
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:Account/#{ons}:Status")
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:Account/#{ons}:Currency")
     end
 
     it "provides full bill_to_contact info when new object" do
@@ -74,9 +74,9 @@ describe Zuora::Objects::SubscribeRequest do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should_not have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:BillToContact/ins2:Id')
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:BillToContact/ins2:FirstName')
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:BillToContact/ins2:LastName')
+      xml.should_not have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:BillToContact/#{ons}:Id")
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:BillToContact/#{ons}:FirstName")
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:BillToContact/#{ons}:LastName")
     end
 
     it "provides full payment_method info when new object" do
@@ -88,10 +88,10 @@ describe Zuora::Objects::SubscribeRequest do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should_not have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:PaymentMethod/ins2:Id')
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:PaymentMethod/ins2:Type').
+      xml.should_not have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PaymentMethod/#{ons}:Id")
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PaymentMethod/#{ons}:Type").
         with_value('ACH')
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:PaymentMethod/ins2:AchAccountName').
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PaymentMethod/#{ons}:AchAccountName").
         with_value('Testing')
     end
 
@@ -111,7 +111,7 @@ describe Zuora::Objects::SubscribeRequest do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should have_xml('//env:Body/ins0:subscribe/ins0:subscribes/ins0:SubscribeOptions/ins2:GenerateInvoice').
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscribeOptions/#{ons}:GenerateInvoice").
         with_value(true)
     end
 

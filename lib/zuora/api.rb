@@ -67,10 +67,17 @@ module Zuora
     end
 
     # Attempt to authenticate against Zuora and initialize the Zuora::Session object
+    #
+    # @note that the Zuora API requires username to come first in the SOAP request so
+    # it is manually generated here instead of simply passing an ordered hash to the client.
+    #
     # Upon failure a Zoura::Fault will be raised.
     # @raise [Zuora::Fault]
     def authenticate!
-      response = client.request(:login){ soap.body = {:username => config.username, :password => config.password} }
+      response = client.request(:login) do
+        ns = Zuora::Api.instance.client.soap.namespace_by_uri('http://api.zuora.com/')
+        soap.body = "<#{ns}:username>#{config.username}</#{ns}:username><#{ns}:password>#{config.password}</#{ns}:password>"
+      end
       self.session = Zuora::Session.generate(response.to_hash)
     rescue Savon::SOAP::Fault => e
       raise Zuora::Fault.new(:message => e.message)

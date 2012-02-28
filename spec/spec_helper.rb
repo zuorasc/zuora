@@ -14,3 +14,16 @@ def generate_key
   Digest::MD5.hexdigest("#{Time.now}-#{rand}")
 end
 
+def zuora_namespace(uri)
+  Zuora::Api.instance.client.soap.namespace_by_uri(uri)
+end
+
+def zns
+  zuora_namespace('http://api.zuora.com/')
+end
+
+def ons
+  zuora_namespace('http://object.api.zuora.com/')
+end
+
+

@@ -80,17 +80,30 @@ module Zuora::Objects
       class_variable_get(:@@deferred_attributes)
     end
 
+    def self.namespace(uri)
+      Zuora::Api.instance.client.soap.namespace_by_uri(uri)
+    end
+
+    def self.zns
+      namespace('http://api.zuora.com/')
+    end
+
+    def self.ons
+      namespace('http://object.api.zuora.com/')
+    end
+
     # locate objects using a custom where clause, currently arel
     # is not supported as it requires an actual db connection to
     # generate the sql queries. This may be overcome in the future.
     def self.where(where)
       keys = (attributes - unselectable_attributes).map(&:to_s).map(&:camelcase)
       if where.is_a?(Hash)
+        # FIXME: improper inject usage.
         where = where.inject([]){|t,v| t << "#{v[0].to_s.camelcase} = '#{v[1]}'"}.sort.join(' and ')
       end
       sql = "select #{keys.join(', ')} from #{remote_name} where #{where}"
       result = Zuora::Api.instance.request(:query) do |xml|
-        xml.ins0 :queryString, sql
+        xml.__send__(zns, :queryString, sql)
       end
       generate(result.to_hash, :query_response)
     end
@@ -118,9 +131,9 @@ module Zuora::Objects
     # create the record remotely
     def create
       result = Zuora::Api.instance.request(:create) do |xml|
-        xml.ins0 :zObjects, 'xsi:type' => "ins2:#{remote_name}" do |a|
+        xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
           self.to_hash.each do |k,v|
-            a.ins2 k.to_s.camelize.to_sym, v unless v.nil?
+            a.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
           end
           generate_complex_objects(a, :create)
         end
@@ -130,13 +143,13 @@ module Zuora::Objects
 
     def update
       result = Zuora::Api.instance.request(:update) do |xml|
-        xml.ins0 :zObjects, 'xsi:type' => "ins2:#{remote_name}" do |a|
+        xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
           obj_attrs = self.to_hash
           obj_id = obj_attrs.delete(:id)
-          a.ins2 :Id, obj_id
+          a.__send__(ons, :Id, obj_id)
           change_syms = changed.map(&:to_sym)
           obj_attrs.reject{|k,v| read_only_attributes.include?(k) }.each do |k,v|
-            a.ins2 k.to_s.camelize.to_sym, v if change_syms.include?(k)
+            a.__send__(ons, k.to_s.camelize.to_sym, v) if change_syms.include?(k)
           end
           generate_complex_objects(a, :update)
         end
@@ -149,8 +162,8 @@ module Zuora::Objects
     # destroy the remote object
     def destroy
       result = Zuora::Api.instance.request(:delete) do |xml|
-        xml.ins0 :type, remote_name
-        xml.ins0 :ids, id
+        xml.__send__(zns, :type, remote_name)
+        xml.__send__(zns, :ids, id)
       end
       apply_response(result.to_hash, :delete_response)
     end
@@ -162,17 +175,17 @@ module Zuora::Objects
       complex_attributes.each do |var, scope|
         scope_element = scope.to_s.singularize.classify.to_sym
         var_element = var.to_s.classify.pluralize.to_sym
-        builder.ins2 var_element do |td|
+        builder.__send__(ons, var_element) do |td|
           self.send(scope).each do |object|
-            td.ins0 scope_element, 'xsi:type' => "ins2:#{scope_element}" do
+            td.__send__(zns, scope_element, 'xsi:type' => "#{ons}:#{scope_element}") do
               case action
               when :create
                 object.to_hash.each do |k,v|
-                  td.ins2 k.to_s.camelize.to_sym, v unless v.nil?
+                  td.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
                 end
               when :update
                 object.to_hash.reject{|k,v| object.read_only_attributes.include?(k) || object.restrain_attributes.include?(k) }.each do |k,v|
-                  td.ins2 k.to_s.camelize.to_sym, v unless v.nil?
+                  td.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
                 end
               end
             end
