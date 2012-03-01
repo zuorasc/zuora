@@ -2,7 +2,6 @@ require 'fattr'
 
 module Zuora
   module Attributes
-
     def self.included(base)
       base.send(:include, ActiveModel::Naming)
       base.send(:include, ActiveModel::Conversion)
@@ -103,11 +102,11 @@ module Zuora
       # All Zuora::Objects::Base inherited objects will have their attributes automatically
       # generated from the provided WSDL.
       def inherited(subclass)
+        super
         xpath = "//xs:complexType[@name='#{subclass.remote_name}']//xs:sequence/xs:element"
         document = Zuora::Api.instance.client.wsdl.parser.instance_variable_get('@document')
         q = document.xpath(xpath, 's0' => 'http://schemas.xmlsoap.org/wsdl/', 'xs' => 'http://www.w3.org/2001/XMLSchema')
         wsdl_attrs = (q.map{|e| e.attributes['name'].value.underscore.to_sym }) << :id
-        puts wsdl_attrs.inspect if subclass.remote_name == 'Account'
         subclass.send(:class_variable_set, :@@wsdl_attributes,  wsdl_attrs)
         subclass.send(:class_variable_set, :@@read_only_attributes, [])
         subclass.send(:class_variable_set, :@@default_attributes, {})
