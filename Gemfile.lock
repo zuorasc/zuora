@@ -17,6 +17,7 @@ PATH
     zuora (0.0.1)
       activemodel (~> 3.0.10)
       activesupport (~> 3.0.10)
+      fattr (> 2.0.0)
       libxml4r (~> 0.2.6)
       savon (~> 0.9.8)
 
