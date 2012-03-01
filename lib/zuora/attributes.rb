@@ -19,7 +19,6 @@ module Zuora
         fattrs class_variable_get(:@@wsdl_attributes)
         class_variable_get(:@@wsdl_attributes).each do |attr|
           # writable attributes with dirty support
-          define_attribute_methods [attr]
           class_eval <<-EVAL
             define_method "#{attr}=" do |value|
               #{attr}_will_change! unless value == @#{attr}
@@ -114,6 +113,8 @@ module Zuora
         subclass.send(:class_variable_set, :@@restrain_attributes, [])
         subclass.send(:class_variable_set, :@@write_only_attributes, [])
         subclass.send(:class_variable_set, :@@deferred_attributes, [])
+
+        subclass.send(:define_attribute_methods, wsdl_attrs)
       end
     end
 
