@@ -25,6 +25,14 @@ describe Zuora::Objects::ProductRatePlanCharge do
       xml.should have_xml("//env:Body/#{zns}:query/#{zns}:queryString").
         with_value(/select .+ from ProductRatePlanChargeTier where ProductRatePlanChargeId = 'test'/)
     end
+
+    it "should not include complex attributes in the request" do
+      MockResponse.responds_with(:product_rate_plan_charge_tier_find_success) do
+        subject.class.find('example')
+      end
+      xml = Zuora::Api.instance.last_request
+      xml.should_not =~ /ProductRatePlanChargeTierData/
+    end
   end
 
   it 'can create a product rate plan with several charge tiers' do
