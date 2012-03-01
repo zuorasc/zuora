@@ -5,12 +5,6 @@ GIT
     wasabi (2.0.0)
       nokogiri (>= 1.4.0)
 
-GIT
-  remote: https://github.com/kitop/fattr.git
-  revision: 705578ba4555ae480f82e7ecd0c16851fe8aec1d
-  specs:
-    fattr (2.1.0)
-
 PATH
   remote: .
   specs:
@@ -37,6 +31,7 @@ GEM
     diff-lcs (1.1.3)
     factory_girl (2.3.2)
       activesupport
+    fattr (2.2.1)
     gyoku (0.4.4)
       builder (>= 2.1.2)
     httpi (0.9.6)
@@ -76,7 +71,6 @@ PLATFORMS
 DEPENDENCIES
   artifice (~> 0.6.0)
   factory_girl (~> 2.3.2)
-  fattr!
   rake (~> 0.8.7)
   redcarpet (~> 2.1.0)
   rspec (~> 2.8.0)
