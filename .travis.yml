@@ -1,4 +1,5 @@
 language: ruby
+before_script: "bundle exec rake appraisal:install"
 script: "bundle exec rake appraisal spec"
 rvm:
   - ree
