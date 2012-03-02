@@ -29,4 +29,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<rspec>, ["~> 2.8.0"])
   s.add_development_dependency(%q<redcarpet>, ["~> 2.1.0"])
   s.add_development_dependency(%q<factory_girl>, ["~> 2.3.2"])
+  s.add_development_dependency(%q<appraisal>, ["~> 0.4.1"])
 end
