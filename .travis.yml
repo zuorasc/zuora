@@ -1,4 +1,5 @@
 language: ruby
+script: "bundle exec rake appraisal spec"
 rvm:
   - ree
   - 1.8.7
