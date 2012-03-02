@@ -89,8 +89,16 @@ module Zuora::Objects
       namespace('http://api.zuora.com/')
     end
 
+    def zns
+      self.class.zns
+    end
+
     def self.ons
       namespace('http://object.api.zuora.com/')
+    end
+
+    def ons
+      self.class.ons
     end
 
     # locate objects using a custom where clause, currently arel
