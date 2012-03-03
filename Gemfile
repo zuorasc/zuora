@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source :rubygems
 
 gem 'wasabi', :git => 'git://github.com/skiz/wasabi.git'
 
