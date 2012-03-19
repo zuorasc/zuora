@@ -7,6 +7,8 @@ module Zuora::Objects
     belongs_to :original, :class_name => 'RatePlanCharge'
     belongs_to :product_rate_plan_charge
     belongs_to :rate_plan
+    
+    has_many :rate_plan_charge_tiers
 
     CHARGE_MODELS = [ 
       "Flat Fee Pricing",
