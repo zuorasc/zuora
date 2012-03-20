@@ -1,4 +1,5 @@
 doc
+*.swp
 .yardoc
 .rvmrc
 zuora.log

@@ -1,0 +1,75 @@
+module Zuora
+  class SoapConnector
+    attr_reader :model
+    delegate :ons, :zns, :remote_name, :id, :to => :model
+
+    def initialize(model)
+      @model = model
+    end
+
+    def where(sql)
+      Zuora::Api.instance.request(:query) do |xml|
+        xml.__send__(@model.zns, :queryString, sql)
+      end
+    end
+
+    def create
+      Zuora::Api.instance.request(:create) do |xml|
+        xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
+          @model.to_hash.each do |k,v|
+            a.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+          end
+          generate_complex_objects(a, :create)
+        end
+      end
+    end
+
+    def update
+      Zuora::Api.instance.request(:update) do |xml|
+        xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
+          obj_attrs = @model.to_hash
+          obj_id = obj_attrs.delete(:id)
+          a.__send__(ons, :Id, obj_id)
+          change_syms = @model.changed.map(&:to_sym)
+          obj_attrs.reject{|k,v| @model.read_only_attributes.include?(k) }.each do |k,v|
+            a.__send__(ons, k.to_s.camelize.to_sym, v) if change_syms.include?(k)
+          end
+          generate_complex_objects(a, :update)
+        end
+      end
+    end
+
+    def destroy
+      Zuora::Api.instance.request(:delete) do |xml|
+        xml.__send__(zns, :type, remote_name)
+        xml.__send__(zns, :ids, id)
+      end
+    end
+
+    protected
+
+    # generate complex objects for inclusion when creating and updating records
+    def generate_complex_objects(builder, action)
+      @model.complex_attributes.each do |var, scope|
+        scope_element = scope.to_s.singularize.classify.to_sym
+        var_element = var.to_s.classify.pluralize.to_sym
+        builder.__send__(ons, var_element) do |td|
+          @model.send(scope).each do |object|
+            td.__send__(zns, scope_element, 'xsi:type' => "#{ons}:#{scope_element}") do
+              case action
+              when :create
+                object.to_hash.each do |k,v|
+                  td.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+                end
+              when :update
+                object.to_hash.reject{|k,v| object.read_only_attributes.include?(k) || object.restrain_attributes.include?(k) }.each do |k,v|
+                  td.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+end

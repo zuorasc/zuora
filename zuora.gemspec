@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency(%q<libxml4r>, ['~> 0.2.6'])
 
   s.add_development_dependency(%q<rake>, ["~> 0.8.7"])
+  s.add_development_dependency(%q<guard-rspec>, ["~> 0.6.0"])
   s.add_development_dependency(%q<artifice>, ["~> 0.6.0"])
   s.add_development_dependency(%q<yard>, ["~> 0.7.5"])
   s.add_development_dependency(%q<rspec>, ["~> 2.8.0"])

@@ -111,9 +111,9 @@ module Zuora::Objects
         where = where.inject([]){|t,v| t << "#{v[0].to_s.camelcase} = '#{v[1]}'"}.sort.join(' and ')
       end
       sql = "select #{keys.join(', ')} from #{remote_name} where #{where}"
-      result = Zuora::Api.instance.request(:query) do |xml|
-        xml.__send__(zns, :queryString, sql)
-      end
+
+      result = self.connector.where(sql)
+
       generate(result.to_hash, :query_response)
     end
 
@@ -139,30 +139,12 @@ module Zuora::Objects
 
     # create the record remotely
     def create
-      result = Zuora::Api.instance.request(:create) do |xml|
-        xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
-          self.to_hash.each do |k,v|
-            a.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
-          end
-          generate_complex_objects(a, :create)
-        end
-      end
+      result = self.connector.create
       apply_response(result.to_hash, :create_response)
     end
 
     def update
-      result = Zuora::Api.instance.request(:update) do |xml|
-        xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
-          obj_attrs = self.to_hash
-          obj_id = obj_attrs.delete(:id)
-          a.__send__(ons, :Id, obj_id)
-          change_syms = changed.map(&:to_sym)
-          obj_attrs.reject{|k,v| read_only_attributes.include?(k) }.each do |k,v|
-            a.__send__(ons, k.to_s.camelize.to_sym, v) if change_syms.include?(k)
-          end
-          generate_complex_objects(a, :update)
-        end
-      end
+      result = self.connector.update
       result = apply_response(result.to_hash, :update_response)
       reset_complex_object_cache
       return result
@@ -170,38 +152,27 @@ module Zuora::Objects
 
     # destroy the remote object
     def destroy
-      result = Zuora::Api.instance.request(:delete) do |xml|
-        xml.__send__(zns, :type, remote_name)
-        xml.__send__(zns, :ids, id)
-      end
+      result = self.connector.destroy
       apply_response(result.to_hash, :delete_response)
     end
 
-    protected
-
-    # generate complex objects for inclusion when creating and updating records
-    def generate_complex_objects(builder, action)
-      complex_attributes.each do |var, scope|
-        scope_element = scope.to_s.singularize.classify.to_sym
-        var_element = var.to_s.classify.pluralize.to_sym
-        builder.__send__(ons, var_element) do |td|
-          self.send(scope).each do |object|
-            td.__send__(zns, scope_element, 'xsi:type' => "#{ons}:#{scope_element}") do
-              case action
-              when :create
-                object.to_hash.each do |k,v|
-                  td.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
-                end
-              when :update
-                object.to_hash.reject{|k,v| object.read_only_attributes.include?(k) || object.restrain_attributes.include?(k) }.each do |k,v|
-                  td.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
-                end
-              end
-            end
-          end
-        end
-      end
+    def self.connector_class
+      @@connector_class ||= Zuora::SoapConnector
     end
+
+    def self.connector_class=(connector)
+      @@connector_class = connector
+    end
+
+    def self.connector
+      self.connector_class.new(self)
+    end
+
+    def connector
+      self.class.connector_class.new(self)
+    end
+
+    protected
 
     # When remote data is loaded, remove the locally cached version of the
     # complex objects so that they may be cleanly reloaded on demand.
@@ -231,6 +202,7 @@ module Zuora::Objects
         return false
       end
     end
+
   end
 end
 

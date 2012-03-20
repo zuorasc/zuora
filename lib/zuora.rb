@@ -12,4 +12,5 @@ require 'zuora/validations'
 require 'zuora/associations'
 require 'zuora/attributes'
 require 'zuora/objects'
+require 'zuora/soap_connector'
 
