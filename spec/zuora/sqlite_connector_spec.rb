@@ -26,26 +26,77 @@ describe Zuora::SqliteConnector do
     end
   end
 
-  describe :create do
-    before :each do
+
+  describe "Behaviors for models using connector" do
+    around :each do |example|
+      old_class = Zuora::Objects::Base.connector_class
+      Zuora::Objects::Base.connector_class = described_class
       described_class.build_schema
-      @model = Zuora::Objects::Product.new
-      @model.name = 'A Product'
-      @instance = described_class.new @model
-      @db = described_class.db
+      example.run
+      Zuora::Objects::Base.connector_class = old_class
     end
 
-    it "creates a record in the table" do
-      @instance.create
-      table_name = described_class.table_name(@model.class)
-      result = @db.execute "SELECT * FROM #{table_name}"
-      result.length.should == 1
+    describe :create do
+      before :each do
+        @model = Zuora::Objects::Product.new
+        @model.name = 'A Product'
+        @db = described_class.db
+      end
+
+      it "creates a record in the table" do
+        @model.create
+        table_name = described_class.table_name(@model.class)
+        result = @db.execute "SELECT * FROM #{table_name}"
+        result.length.should == 1
+      end
+
+      it "successfully updates the model id" do
+        @model.create
+        @model.id.should_not be_nil
+      end
     end
 
-    it "returns success and new id in ash" do
-      result = @instance.create[:create_response]
-      result[:success].should be_true
-      result[:id].should_not be_nil
+    describe :update do
+      before :each do
+        described_class.build_schema
+        @model = Zuora::Objects::Product.new
+        @model.name = 'A Product'
+        @model.create
+        @db = described_class.db
+        @model.name = 'New Product'
+        @model.update
+      end
+
+      it "updates a record in the table" do
+        table_name  = described_class.table_name(@model.class)
+        result      = @db.execute "SELECT * FROM #{table_name} ORDER BY 'id' DESC"
+        result.first.include?("New Product").should be
+      end
+
+      it "marks the model as unchanged" do
+        @model.should_not be_changed
+      end
+    end
+
+    describe :destroy do
+      before :each do
+        described_class.build_schema
+        @model = Zuora::Objects::Product.new
+        @model.name = 'A Product'
+        @model.create
+        @db = described_class.db
+        @model.destroy
+      end
+
+      it "updates a record in the table" do
+        table_name  = described_class.table_name(@model.class)
+        result      = @db.execute "SELECT * FROM #{table_name} WHERE id=?", @model.id
+        result.length.should == 0
+      end
+
+      it "marks the model as unchanged" do
+        @model.should_not be_changed
+      end
     end
   end
 end
