@@ -20,8 +20,9 @@ describe Zuora::SqliteConnector do
       @models.each do |m|
         table_name = described_class.table_name(m)
         table = @db.table_info(table_name)
-        columns = table.map {|t| t["name"].to_sym }
-        (m.attributes - columns).should == []
+        columns = table.map {|t| t["name"] }
+        camel_attrs = m.attributes.map { |a| a.to_s.camelize }
+        (camel_attrs - columns).should == []
       end
     end
   end
@@ -34,6 +35,24 @@ describe Zuora::SqliteConnector do
       described_class.build_schema
       example.run
       Zuora::Objects::Base.connector_class = old_class
+    end
+
+    describe :where do
+      before :each do
+        @model = Zuora::Objects::Product
+        @db = described_class.db
+
+        @product1 = @model.new :name => 'Product One'
+        @product1.create
+        @product2 = @model.new :name => 'Another One'
+        @product2.create
+      end
+
+      it "returns matching records" do
+        records = @model.where(:name => 'Product One')
+        records.first.name.should == @product1.name
+        records.first.id.should == @product1.id
+      end
     end
 
     describe :create do

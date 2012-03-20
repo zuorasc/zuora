@@ -7,7 +7,7 @@ module Zuora
       @model = model
     end
 
-    def where(sql)
+    def query(sql)
       Zuora::Api.instance.request(:query) do |xml|
         xml.__send__(@model.zns, :queryString, sql)
       end
@@ -44,6 +44,37 @@ module Zuora
         xml.__send__(zns, :type, remote_name)
         xml.__send__(zns, :ids, id)
       end
+    end
+
+    # Remove empty attributes from response hash
+    # and typecast any known types from the wsdl
+    def parse_attributes(type, attrs={})
+      # after quite a bit of upstream work, savon
+      # still doesn't support using wsdl response
+      # definitions, and only handles inline types.
+      # This is a work in progress, and hopefully this
+      # can be removed in the future via proper support.
+      tdefs = Zuora::Api.instance.client.wsdl.type_definitions
+      klass = attrs['@xsi:type'.to_sym].base_name
+      if klass
+        attrs.each do |a,v|
+          ref = a.to_s.camelcase
+          z = tdefs.find{|d| d[0] == [klass, ref] }
+          if z
+            case z[1]
+            when 'integer', 'int' then
+              attrs[a] = v.nil? ? nil : v.to_i
+            when 'decimal' then
+              attrs[a] = v.nil? ? nil : BigDecimal(v.to_s)
+            when 'float', 'double' then
+              attrs[a] = v.nil? ? nil : v.to_f
+            end
+          end
+        end
+      end
+      #remove unknown attributes
+      available = @model.attributes.map(&:to_sym)
+      attrs.delete_if {|k,v| !available.include?(k) }
     end
 
     protected

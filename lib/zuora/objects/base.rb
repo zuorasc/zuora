@@ -21,43 +21,12 @@ module Zuora::Objects
       result = soap_hash[type][:result]
       return [] if result[:records] == nil
       if result[:size].to_i == 1
-        [(new parse_attributes(type, result[:records])).clear_changed_attributes!]
+        [(new self.connector.parse_attributes(type, result[:records])).clear_changed_attributes!]
       else
         result[:records].map do |record|
-          (new parse_attributes(type, record)).clear_changed_attributes!
+          (new self.connector.parse_attributes(type, record)).clear_changed_attributes!
         end
       end
-    end
-
-    # Remove empty attributes from response hash
-    # and typecast any known types from the wsdl
-    def self.parse_attributes(type, attrs={})
-      # after quite a bit of upstream work, savon
-      # still doesn't support using wsdl response
-      # definitions, and only handles inline types.
-      # This is a work in progress, and hopefully this
-      # can be removed in the future via proper support.
-      tdefs = Zuora::Api.instance.client.wsdl.type_definitions
-      klass = attrs['@xsi:type'.to_sym].base_name
-      if klass
-        attrs.each do |a,v|
-          ref = a.to_s.camelcase
-          z = tdefs.find{|d| d[0] == [klass, ref] }
-          if z
-            case z[1]
-            when 'integer', 'int' then
-              attrs[a] = v.nil? ? nil : v.to_i
-            when 'decimal' then
-              attrs[a] = v.nil? ? nil : BigDecimal(v.to_s)
-            when 'float', 'double' then
-              attrs[a] = v.nil? ? nil : v.to_f
-            end
-          end
-        end
-      end
-      #remove unknown attributes
-      available = attributes.map(&:to_sym)
-      attrs.delete_if {|k,v| !available.include?(k) }
     end
 
     # find a record by the id
@@ -112,7 +81,7 @@ module Zuora::Objects
       end
       sql = "select #{keys.join(', ')} from #{remote_name} where #{where}"
 
-      result = self.connector.where(sql)
+      result = self.connector.query(sql)
 
       generate(result.to_hash, :query_response)
     end

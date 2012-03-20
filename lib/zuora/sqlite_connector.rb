@@ -9,13 +9,27 @@ module Zuora
       @model = model
     end
 
+    def query(sql)
+      result = db.query sql
+      hashed_result = result.map {|r| hash_result_row(r, result) }
+      {
+        :query_response => {
+          :result => {
+            :success => true,
+            :size => result.count,
+            :records => hashed_result
+          }
+        }
+      }
+    end
+
     def create
       table = self.class.table_name(@model.class)
       hash = @model.to_hash
       keys = []
       values = []
       hash.each do |key, value|
-        keys << key
+        keys << key.to_s.camelize
         values << value
       end
       place_holder = ['?'] * keys.length
@@ -41,7 +55,7 @@ module Zuora
       keys = []
       values = []
       hash.each do |key, value|
-        keys << "#{key}=?"
+        keys << "#{key.to_s.camelize}=?"
         values << value
       end
       keys = keys.join(', ')
@@ -59,7 +73,7 @@ module Zuora
 
     def destroy
       table = self.class.table_name(@model.class)
-      destroy = "DELETE FROM '#{table}' WHERE id=?"
+      destroy = "DELETE FROM '#{table}' WHERE Id=?"
       db.execute destroy, @model.id
       {
         :delete_response => {
@@ -71,19 +85,28 @@ module Zuora
       }
     end
 
+    def parse_attributes(type, attrs = {})
+      data = attrs.to_a.map do |a|
+        key, value = a
+        [key.underscore, value]
+      end
+      Hash[data]
+    end
+
     def self.build_schema
       self.db = SQLite3::Database.new ":memory:"
       self.generate_tables
     end
 
     def self.table_name(model)
-      model.name.underscore.gsub '/', '_'
+      model.name.demodulize
     end
 
     protected
 
-    def hash_result_row(row)
-      Hash[row.columns.zip(row.first.to_a)]
+    def hash_result_row(row, result)
+      row = row.map {|r| r.nil? ? "" : r }
+      Hash[result.columns.zip(row.to_a)]
     end
 
     def self.generate_tables
@@ -96,9 +119,9 @@ module Zuora
       table_name = self.table_name(model)
       attributes = model.attributes - [:id]
       attributes = attributes.map do |a|
-        "'#{a}' text"
+        "'#{a.to_s.camelize}' text"
       end
-      autoid = "'id' integer PRIMARY KEY AUTOINCREMENT"
+      autoid = "'Id' integer PRIMARY KEY AUTOINCREMENT"
       attributes.unshift autoid
       attributes = attributes.join(", ")
       schema = "CREATE TABLE 'main'.'#{table_name}' (#{attributes});"
