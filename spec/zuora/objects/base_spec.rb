@@ -21,4 +21,11 @@ describe Zuora::Objects::Base do
       described_class.connector_class = Zuora::SoapConnector
     end
   end
+
+  describe :initializer do
+    it "allows to overwrite default values" do
+      Zuora::Objects::Invoice.new.includes_usage.should be_true
+      Zuora::Objects::Invoice.new(:includes_usage => false).includes_usage.should be_false
+    end
+  end
 end

@@ -26,11 +26,12 @@ module Zuora
     def create
       table = self.class.table_name(@model.class)
       hash = @model.to_hash
+      hash.delete(:id)
       keys = []
       values = []
       hash.each do |key, value|
         keys << key.to_s.camelize
-        values << value
+        values << value.to_s
       end
       place_holder = ['?'] * keys.length
       keys = keys.join(', ')
@@ -49,17 +50,17 @@ module Zuora
     end
 
     def update
-      table = self.class.table_name(@model.class)
-      hash = @model.to_hash
-      id   = hash.delete(:id)
-      keys = []
+      table  = self.class.table_name(@model.class)
+      hash   = @model.to_hash
+      id     = hash.delete(:id)
+      keys   = []
       values = []
       hash.each do |key, value|
         keys << "#{key.to_s.camelize}=?"
-        values << value
+        values << value.to_s
       end
-      keys = keys.join(', ')
-      update = "UPDATE '#{table}' SET #{keys}"
+      keys   = keys.join(', ')
+      update = "UPDATE '#{table}' SET #{keys} WHERE ID=#{id}"
       db.execute update, values
       {
         :update_response => {
