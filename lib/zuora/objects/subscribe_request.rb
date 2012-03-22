@@ -1,13 +1,59 @@
 module Zuora::Objects
   class SubscribeRequest < Base
-    attr_accessor :account
-    attr_accessor :subscription
-    attr_accessor :bill_to_contact
-    attr_accessor :payment_method
-    attr_accessor :sold_to_contact
-    attr_accessor :product_rate_plan
+    attr_reader :account
+    attr_reader :subscription
+    attr_reader :bill_to_contact
+    attr_reader :payment_method
+    attr_reader :sold_to_contact
+    attr_reader :product_rate_plan
 
-    fattr :subscribe_options => {}
+    class << self
+      def subscribe_options
+        @subscribe_options ||= {}
+      end
+
+      def subscribe_options=(values)
+        @subscribe_options = values
+      end
+    end
+
+    def subscribe_options
+      self.class.subscribe_options
+    end
+
+    def subscribe_options=(values)
+      self.class.subscribe_options=(values)
+    end
+
+    def account=(value)
+      @account = value
+      self.class.subscribe_options[:account] = @account
+    end
+
+    def subscription=(value)
+      @subscription = value
+      self.class.subscribe_options[:subscription] = @subscription
+    end
+
+    def bill_to_contact=(value)
+      @bill_to_contact = value
+      self.class.subscribe_options[:bill_to_contact] = @bill_to_contact
+    end
+
+    def payment_method=(value)
+      @payment_method = value
+      self.class.subscribe_options[:payment_method] = @payment_method
+    end
+
+    def sold_to_contact=(value)
+      @sold_to_contact = value
+      self.class.subscribe_options[:sold_to_contact] = @sold_to_contact
+    end
+
+    def product_rate_plan=(value)
+      @product_rate_plan = value
+      self.class.subscribe_options[:produce_rate_plan] = @produce_rate_plan
+    end
 
     validate do |request|
       request.must_have_usable(:account)
