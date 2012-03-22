@@ -7,7 +7,7 @@ module Zuora::Objects
     attr_accessor :sold_to_contact
     attr_accessor :product_rate_plan
 
-    fattr :subscribe_options => {}
+    store_accessors :subscribe_options
 
     validate do |request|
       request.must_have_usable(:account)
