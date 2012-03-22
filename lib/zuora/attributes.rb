@@ -21,7 +21,9 @@ module Zuora
           # writable attributes with dirty support
           class_eval <<-EVAL
             define_method "#{attr}=" do |value|
-              #{attr}_will_change! unless value == @#{attr}
+              return if value == @#{attr}
+
+              #{attr}_will_change!
               @#{attr} = value
             end
           EVAL
