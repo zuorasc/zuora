@@ -1,7 +1,8 @@
-Factory.define :product_rate_plan, :class => Zuora::Objects::ProductRatePlan do |f|
-  f.sequence(:name){|n| "Rate Plan #{n}"}
-  f.association :product
-  f.effective_start_date DateTime.now
-  f.effective_end_date   DateTime.now + 10.days
+FactoryGirl.define do
+  factory :product_rate_plan, :class => Zuora::Objects::ProductRatePlan do
+    sequence(:name){|n| "Rate Plan #{n}"}
+    association :product
+    effective_start_date DateTime.now
+    effective_end_date   DateTime.now + 10.days
+  end
 end
-

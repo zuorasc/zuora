@@ -1,5 +1,6 @@
-Factory.define :contact, :class => Zuora::Objects::Contact do |f|
-  f.first_name "Example"
-  f.sequence(:last_name){|n| "User #{n}" }
+FactoryGirl.define do
+  factory :contact, :class => Zuora::Objects::Contact do
+    first_name "Example"
+    sequence(:last_name){|n| "User #{n}" }
+  end
 end
-

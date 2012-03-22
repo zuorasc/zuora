@@ -4,8 +4,8 @@ describe "Subscription" do
 
   before :each do
     authenticate!
-    @account = Factory.create(:active_account, :account_number => generate_key)
-    @product = Factory.create(:product_catalog, :name => generate_key)
+    @account = FactoryGirl.create(:active_account, :account_number => generate_key)
+    @product = FactoryGirl.create(:product_catalog, :name => generate_key)
   end
 
   after :each do
@@ -14,10 +14,10 @@ describe "Subscription" do
   end
 
   it "can be created" do
-    payment_method = Factory.create(:payment_method_credit_card, :account => @account)
+    payment_method = FactoryGirl.create(:payment_method_credit_card, :account => @account)
     bill_to_contact = @account.contacts.first
     product_rate_plan = @product.product_rate_plans.first
-    subscription = Factory.build(:subscription, :account => @account)
+    subscription = FactoryGirl.build(:subscription, :account => @account)
 
     request = Zuora::Objects::SubscribeRequest.new(
       :account => @account,
