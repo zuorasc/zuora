@@ -1,5 +1,3 @@
-require 'fattr'
-
 module Zuora
   module Attributes
     def self.included(base)
@@ -16,10 +14,19 @@ module Zuora
       # can be applied to those attributes.
       def define_attributes(&block)
         yield self
-        fattrs class_variable_get(:@@wsdl_attributes)
         class_variable_get(:@@wsdl_attributes).each do |attr|
-          # writable attributes with dirty support
           class_eval <<-EVAL
+            @@all_attributes << "#{attr}".to_sym
+
+            define_method "#{attr}" do
+              @#{attr}
+            end
+
+            define_method "#{attr}?" do
+              #{attr} ? true : false
+            end
+
+            # writable attributes with dirty support
             define_method "#{attr}=" do |value|
               return if value == @#{attr}
 
@@ -65,6 +72,7 @@ module Zuora
 
             define_method "\#{attribute}=" do |value|
               #{storage_name}[attribute] = value
+              @@all_attributes << attribute.to_sym
               super
             end
           end
@@ -114,7 +122,7 @@ module Zuora
       alias_method :restrain_attributes, :restrain
 
       def attributes
-        self.fattrs.map(&:to_sym)
+        class_variable_get(:@@all_attributes).map(&:to_sym)
       end
 
       # the name to use when referencing remote Zuora objects
@@ -137,6 +145,7 @@ module Zuora
         subclass.send(:class_variable_set, :@@restrain_attributes, [])
         subclass.send(:class_variable_set, :@@write_only_attributes, [])
         subclass.send(:class_variable_set, :@@deferred_attributes, [])
+        subclass.send(:class_variable_set, :@@all_attributes, [])
 
         subclass.send(:define_attribute_methods, wsdl_attrs)
       end
@@ -186,7 +195,7 @@ module Zuora
 
     # a hash representation of all attributes including their values
     def attributes
-      self.class.fattrs.inject({}){|h,a| h.update a.to_sym => send(a)}
+      self.class.attributes.inject({}){|h,a| h.update a.to_sym => send(a)}
     end
     alias_method :to_hash, :attributes
 
