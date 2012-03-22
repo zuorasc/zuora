@@ -49,6 +49,28 @@ module Zuora
         end
       end
 
+      # Store attr_accessor and their values
+      def store_accessors(storage_name)
+        class_eval <<-EVAL, __FILE__, __LINE__ + 1
+          define_method "#{storage_name}" do
+            @#{storage_name} ||= {}
+          end
+
+          define_method "#{storage_name}=" do |value|
+            @#{storage_name} = value
+          end
+
+          def attr_accessor(attribute)
+            super
+
+            define_method "\#{attribute}=" do |value|
+              #{storage_name}[attribute] = value
+              super
+            end
+          end
+        EVAL
+      end
+
       # define read only attributes which will not be sent
       # to the server when making update and create requests.
       def read_only(*args)
