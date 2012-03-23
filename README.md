@@ -58,6 +58,7 @@ All additional requirements for development should be referenced in the provided
 ## Contributors
   * Josh Martin <josh.martin@wildfireapp.com>
   * Alex Reyes <alex.reyes@wildfireapp.com>
+  * Wael Nasreddine <wael.nasreddine@wildfireapp.com>
 
 ## Credits
   * [Wildfire Ineractive](http://www.wildfireapp.com) for facilitating the development and maintenance of the project.
