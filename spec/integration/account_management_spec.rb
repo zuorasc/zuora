@@ -43,7 +43,7 @@ describe "Account Management" do
 
   describe "an active account fixture" do
     it "can be destroyed" do
-      account = FactoryGirl(:active_account, :account_number => generate_key)
+      account = FactoryGirl.create(:active_account, :account_number => generate_key)
       account.status.should == 'Active'
       account.destroy.should == true
     end
