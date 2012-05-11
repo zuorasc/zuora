@@ -43,6 +43,44 @@ All additional requirements for development should be referenced in the provided
 
       $ rake spec
 
+## Multiple Connectors
+  There are mutiple connectors available to us to communicate from library to Zuora (or even a test
+  SQLite database)
+
+  To set your connector:
+
+    Zuora::Base.connector_class = Zuora::YourChosenConnector
+
+### Default SOAPConnector
+  This one is for normal usage, and is configured in the usual way. You do not need to explicitly
+  set this connector.  It uses the SOAP api for Zuora
+
+### SQLite Connector
+  This connector is for usage in tests, and allows you to model fixtures and factories using the
+  ZObjects, but within an in memory SQLite database.  To use this:
+
+    require 'zuora/sqlite_connector'
+    Zuora::Base.connector_class = Zuora::SqliteConnector
+    Zuora::SqliteConnector.build_schema #Builds the sqlite schema from the ZObjects defined
+
+### Multiple Config SOAPConnector
+  This connector is for when you need to authenticate with Zuora using mutiple credentials, and
+  allows you to specify within a block which config to use.  This is done per-thread, so will
+  not effect other requests.
+
+    Zuora::Base.connector_class = Zuora::MultiSoapConnector
+
+    # Note we don't use Zuora.configure, as that's global:
+    Zuora::MultiSoapConnector.configure :named_config, :username => 'u', :password => 'p'
+    Zuora::MultiSoapConnector.configure :another_config, :username => 'u2', :password => 'p2'
+
+    #To select a specific one at run time (required)
+    Zuora::MultiSoapConnector.use_config :named_config do
+      # Make use of ZObjects where, will authenticate and use
+      # specific config
+      Accounts.where('condition = TRUE')
+    end
+
 ## Live Integration Suite
   There is also a live suite which you can test against your sandbox account.
   This can by ran by setting up your credentials and running the integration suite.
