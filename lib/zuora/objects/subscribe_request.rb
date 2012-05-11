@@ -37,7 +37,7 @@ module Zuora::Objects
     # Generate a subscription request
     def create
       return false unless valid?
-      result = Zuora::Api.instance.request(:subscribe) do |xml|
+      result = connector.current_client.request(:subscribe) do |xml|
         xml.__send__(zns, :subscribes) do |s|
           s.__send__(zns, :Account) do |a|
             generate_account(a)
