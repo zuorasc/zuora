@@ -1,4 +1,3 @@
-require 'singleton'
 require 'savon'
 
 module Zuora
@@ -20,7 +19,6 @@ module Zuora
   end
 
   class Api
-    include Singleton
     # @return [Savon::Client]
     attr_accessor :client
 
@@ -31,6 +29,10 @@ module Zuora
     attr_accessor :config
 
     WSDL = File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
+
+    def self.instance
+      @instance ||= new
+    end
 
     # Is this an authenticated session?
     # @return [Boolean]

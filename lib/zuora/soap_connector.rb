@@ -8,13 +8,13 @@ module Zuora
     end
 
     def query(sql)
-      Zuora::Api.instance.request(:query) do |xml|
+      current_client.request(:query) do |xml|
         xml.__send__(@model.zns, :queryString, sql)
       end
     end
 
     def create
-      Zuora::Api.instance.request(:create) do |xml|
+      current_client.request(:create) do |xml|
         xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
           @model.to_hash.each do |k,v|
             a.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
@@ -25,7 +25,7 @@ module Zuora
     end
 
     def update
-      Zuora::Api.instance.request(:update) do |xml|
+      current_client.request(:update) do |xml|
         xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
           obj_attrs = @model.to_hash
           obj_id = obj_attrs.delete(:id)
@@ -40,7 +40,7 @@ module Zuora
     end
 
     def destroy
-      Zuora::Api.instance.request(:delete) do |xml|
+      current_client.request(:delete) do |xml|
         xml.__send__(zns, :type, remote_name)
         xml.__send__(zns, :ids, id)
       end
@@ -54,7 +54,7 @@ module Zuora
       # definitions, and only handles inline types.
       # This is a work in progress, and hopefully this
       # can be removed in the future via proper support.
-      tdefs = Zuora::Api.instance.client.wsdl.type_definitions
+      tdefs = current_client.client.wsdl.type_definitions
       klass = attrs['@xsi:type'.to_sym].base_name
       if klass
         attrs.each do |a,v|
@@ -75,6 +75,10 @@ module Zuora
       #remove unknown attributes
       available = @model.attributes.map(&:to_sym)
       attrs.delete_if {|k,v| !available.include?(k) }
+    end
+
+    def current_client
+      Zuora::Api.instance
     end
 
     protected
