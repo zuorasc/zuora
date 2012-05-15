@@ -28,7 +28,14 @@ module Zuora
     # @return [Zuora::Config]
     attr_accessor :config
 
-    WSDL = File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
+
+    def self.wsdl_path=(path)
+      @wsdl_path = path
+    end
+
+    def self.wsdl_path
+      @wsdl_path ||= File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
+    end
 
     def self.instance
       @instance ||= new
@@ -92,8 +99,9 @@ module Zuora
         savon.soap_version = 2
       end
 
+      wsdl_path = self.class.wsdl_path
       self.client = Savon::Client.new do
-        wsdl.document = WSDL
+        wsdl.document =  wsdl_path
         http.auth.ssl.verify_mode = :none
       end
     end
