@@ -86,6 +86,28 @@ module Zuora
       }
     end
 
+    def subscribe
+      [
+        :account,
+        :subscription,
+        :bill_to_contact,
+        :payment_method,
+        :sold_to_contact,
+        :product_rate_plan
+      ].each do |relation|
+        @model.send(relation).create
+      end
+
+      {
+        :subscribe_response => {
+          :result => {
+            :success => true,
+            :id => nil
+          }
+        }
+      }
+    end
+
     def parse_attributes(type, attrs = {})
       data = attrs.to_a.map do |a|
         key, value = a
