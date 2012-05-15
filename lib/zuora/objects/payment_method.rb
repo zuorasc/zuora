@@ -5,7 +5,7 @@ module Zuora::Objects
     validates_presence_of :account_id
 
     # Generic Validations
-    validates_inclusion_of    :type, :in => %w(ACH Cash Check CreditCard CreditCardReferenceTransaction DebitCard Other PayPal WireTransfer)
+    validates_inclusion_of    :type, :in => %w(ACH BankAccount Cash Check CreditCard CreditCardReferenceTransaction DebitCard Other PayPal WireTransfer)
     validates_length_of       :device_session_id, :maximum => 255, :allow_nil => true
     validates_length_of       :email, :maximum => 80, :allow_nil => true
     validates_length_of       :ip_address, :maximum => 15, :allow_nil => true
