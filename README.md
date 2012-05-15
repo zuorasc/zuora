@@ -49,7 +49,7 @@ All additional requirements for development should be referenced in the provided
 
   To set your connector:
 
-    Zuora::Base.connector_class = Zuora::YourChosenConnector
+    Zuora::Objects::Base.connector_class = Zuora::YourChosenConnector
 
 ### Default SOAPConnector
   This one is for normal usage, and is configured in the usual way. You do not need to explicitly
@@ -60,7 +60,7 @@ All additional requirements for development should be referenced in the provided
   ZObjects, but within an in memory SQLite database.  To use this:
 
     require 'zuora/sqlite_connector'
-    Zuora::Base.connector_class = Zuora::SqliteConnector
+    Zuora::Objects::Base.connector_class = Zuora::SqliteConnector
     Zuora::SqliteConnector.build_schema #Builds the sqlite schema from the ZObjects defined
 
 ### Multiple Config SOAPConnector
@@ -68,7 +68,7 @@ All additional requirements for development should be referenced in the provided
   allows you to specify within a block which config to use.  This is done per-thread, so will
   not effect other requests.
 
-    Zuora::Base.connector_class = Zuora::MultiSoapConnector
+    Zuora::Objects::Base.connector_class = Zuora::MultiSoapConnector
 
     # Note we don't use Zuora.configure, as that's global:
     Zuora::MultiSoapConnector.configure :named_config, :username => 'u', :password => 'p'
