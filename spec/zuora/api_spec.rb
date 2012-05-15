@@ -6,10 +6,6 @@ describe Zuora::Api do
       Zuora::Api.any_instance.stub(:authenticated?).and_return(true)
     end
 
-    it "has readable wsdl_path" do
-      File.exists?(Zuora::Api.wsdl_path).should be
-    end
-
     it "uses provided wsdl_path" do
       Zuora::Api.instance.client.wsdl.endpoint.to_s.should == "https://www.zuora.com/apps/services/a/38.0"
     end

@@ -28,15 +28,6 @@ module Zuora
     # @return [Zuora::Config]
     attr_accessor :config
 
-
-    def self.wsdl_path=(path)
-      @wsdl_path = path
-    end
-
-    def self.wsdl_path
-      @wsdl_path ||= File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
-    end
-
     def self.instance
       @instance ||= new
     end
@@ -92,15 +83,20 @@ module Zuora
       raise Zuora::Fault.new(:message => e.message)
     end
 
-    private
+    def client
+      return @client if @client
 
-    def initialize
       Savon.configure do |savon|
         savon.soap_version = 2
       end
 
-      wsdl_path = self.class.wsdl_path
-      self.client = Savon::Client.new do
+      wsdl_path = if config && config.wsdl_path
+                    config.wsdl_path
+                  else
+                    File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
+                  end
+
+      @client = Savon::Client.new do
         wsdl.document =  wsdl_path
         http.auth.ssl.verify_mode = :none
       end
