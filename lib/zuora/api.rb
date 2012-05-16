@@ -1,4 +1,3 @@
-require 'singleton'
 require 'savon'
 
 module Zuora
@@ -20,7 +19,6 @@ module Zuora
   end
 
   class Api
-    include Singleton
     # @return [Savon::Client]
     attr_accessor :client
 
@@ -30,7 +28,9 @@ module Zuora
     # @return [Zuora::Config]
     attr_accessor :config
 
-    WSDL = File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
+    def self.instance
+      @instance ||= new
+    end
 
     # Is this an authenticated session?
     # @return [Boolean]
@@ -62,6 +62,7 @@ module Zuora
           soap.body = xml_body
         end
       end
+
     rescue Savon::SOAP::Fault, IOError => e
       raise Zuora::Fault.new(:message => e.message)
     end
@@ -83,15 +84,21 @@ module Zuora
       raise Zuora::Fault.new(:message => e.message)
     end
 
-    private
+    def client
+      return @client if @client
 
-    def initialize
       Savon.configure do |savon|
         savon.soap_version = 2
       end
 
-      self.client = Savon::Client.new do
-        wsdl.document = WSDL
+      wsdl_path = if config && config.wsdl_path
+                    config.wsdl_path
+                  else
+                    File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
+                  end
+
+      @client = Savon::Client.new do
+        wsdl.document =  wsdl_path
         http.auth.ssl.verify_mode = :none
       end
     end
