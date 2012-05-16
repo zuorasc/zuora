@@ -36,42 +36,8 @@ module Zuora::Objects
 
     # Generate a subscription request
     def create
-      return false unless valid?
-      result = connector.current_client.request(:subscribe) do |xml|
-        xml.__send__(zns, :subscribes) do |s|
-          s.__send__(zns, :Account) do |a|
-            generate_account(a)
-          end
-
-          s.__send__(zns, :SubscribeOptions) do |so|
-            generate_subscribe_options(so)
-          end unless subscribe_options.blank?
-
-          s.__send__(zns, :PaymentMethod) do |pm|
-            generate_payment_method(pm)
-          end
-
-          s.__send__(zns, :BillToContact) do |btc|
-            generate_bill_to_contact(btc)
-          end
-
-          s.__send__(zns, :SoldToContact) do |btc|
-            generate_sold_to_contact(btc)
-          end unless sold_to_contact.nil?
-
-          s.__send__(zns, :SubscriptionData) do |sd|
-            sd.__send__(zns, :Subscription) do |sub|
-              generate_subscription(sub)
-            end
-
-            sd.__send__(zns, :RatePlanData) do |rpd|
-              rpd.__send__(zns, :RatePlan) do |rp|
-                rp.__send__(ons, :ProductRatePlanId, product_rate_plan.id)
-              end
-            end
-          end
-        end
-      end
+      # return false unless valid?
+      result = connector.subscribe
       apply_response(result.to_hash, :subscribe_response)
     end
 
@@ -90,59 +56,7 @@ module Zuora::Objects
         return false
       end
     end
-
-    def generate_bill_to_contact(builder)
-      if bill_to_contact.new_record?
-        bill_to_contact.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
-        end
-      else
-        builder.__send__(ons, :Id, bill_to_contact.id)
-      end
-    end
-
-    def generate_sold_to_contact(builder)
-      if sold_to_contact.new_record?
-        sold_to_contact.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
-        end
-      else
-        builder.__send__(ons, :Id, sold_to_contact.id)
-      end
-    end
-
-    def generate_account(builder)
-      if account.new_record?
-        account.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
-        end
-      else
-        builder.__send__(ons, :Id, account.id)
-      end
-    end
-
-    def generate_payment_method(builder)
-      if payment_method.new_record?
-        payment_method.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
-        end
-      else
-        builder.__send__(ons, :Id, payment_method.id)
-      end
-    end
-
-    def generate_subscription(builder)
-      subscription.to_hash.each do |k,v|
-        builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
-      end
-    end
-
-    def generate_subscribe_options(builder)
-      subscribe_options.each do |k,v|
-        builder.__send__(ons, k.to_s.camelize.to_sym, v)
-      end
-    end
-
+    #
     # TODO: Restructute an intermediate class that includes
     # persistence only within ZObject models.
     # These methods are not relevant, but defined in Base

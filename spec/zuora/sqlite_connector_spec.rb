@@ -118,16 +118,38 @@ describe Zuora::SqliteConnector do
       end
     end
 
-      describe "factories" do
-        before :each do
-          @product = Factory(:product)
-        end
+    describe :subscribe do
+      before :each do
+        described_class.build_schema
+        @acc = Zuora::Objects::Account.new
+        @subscription = Zuora::Objects::Subscription.new
+        @bill_to_contact = Zuora::Objects::Contact.new
+        @payment_method = Zuora::Objects::PaymentMethod.new
+        @sold_to_contact = Zuora::Objects::Contact.new
+        @product_rate_plan = Zuora::Objects::ProductRatePlan.new
 
-        it "should exists" do
-          @product.should be
-        end
+        @model = Zuora::Objects::SubscribeRequest.new
+        @model.account = @acc
+        @model.subscription = @subscription
+        @model.bill_to_contact = @bill_to_contact
+        @model.payment_method = @payment_method
+        @model.sold_to_contact = @sold_to_contact
+        @model.product_rate_plan = @product_rate_plan
       end
-  end
 
+      it "calls create on all of the related objects" do
+        @acc.should_receive(:create)
+        @subscription.should_receive(:create)
+        @bill_to_contact.should_receive(:create)
+        @payment_method.should_receive(:create)
+        @sold_to_contact.should_receive(:create)
+        @product_rate_plan.should_receive(:create)
+
+        @model.stub(:valid?).and_return(true)
+        @model.create
+      end
+
+    end
+  end
 
 end
