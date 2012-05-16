@@ -55,11 +55,11 @@ module Zuora
 
           s.__send__(zns, :PaymentMethod) do |pm|
             generate_payment_method(pm)
-          end
+          end unless @model.payment_method.nil?
 
           s.__send__(zns, :BillToContact) do |btc|
             generate_bill_to_contact(btc)
-          end
+          end unless @model.bill_to_contact.nil?
 
           s.__send__(zns, :SoldToContact) do |btc|
             generate_sold_to_contact(btc)

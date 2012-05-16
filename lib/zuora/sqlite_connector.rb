@@ -95,7 +95,14 @@ module Zuora
         :sold_to_contact,
         :product_rate_plan
       ].each do |relation|
-        @model.send(relation).create
+        obj = @model.send(relation)
+        if obj
+          if obj.new_record?
+            obj.create
+          else
+            obj.update
+          end
+        end
       end
 
       {
@@ -133,8 +140,8 @@ module Zuora
     end
 
     def self.generate_tables
-      Zuora::Objects::Base.subclasses.each do |model|
-        create_table(model)
+      Zuora::Objects.constants.select { |c| c != :Base }.each do |model|
+        create_table(Zuora::Objects.const_get(model))
       end
     end
 
@@ -144,7 +151,7 @@ module Zuora
       attributes = attributes.map do |a|
         "'#{a.to_s.camelize}' text"
       end
-      autoid = "'Id' integer PRIMARY KEY AUTOINCREMENT"
+      autoid = "'Id' integer primary key"
       attributes.unshift autoid
       attributes = attributes.join(", ")
       schema = "CREATE TABLE 'main'.'#{table_name}' (#{attributes});"
