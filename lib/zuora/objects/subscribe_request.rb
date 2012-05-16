@@ -36,7 +36,7 @@ module Zuora::Objects
 
     # Generate a subscription request
     def create
-      return false unless valid?
+      # return false unless valid?
       result = connector.subscribe
       apply_response(result.to_hash, :subscribe_response)
     end

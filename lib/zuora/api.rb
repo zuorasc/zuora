@@ -62,6 +62,7 @@ module Zuora
           soap.body = xml_body
         end
       end
+
     rescue Savon::SOAP::Fault, IOError => e
       raise Zuora::Fault.new(:message => e.message)
     end
