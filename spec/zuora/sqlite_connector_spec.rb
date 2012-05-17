@@ -4,7 +4,8 @@ require 'zuora/sqlite_connector'
 describe Zuora::SqliteConnector do
   describe :build_schema do
     before :each do
-      @models = Zuora::Objects::Base.subclasses
+      mod = Zuora::Objects
+      @models = mod.constants.select { |x| mod.const_defined?(x) && mod.const_get(x) < mod::Base }.map { |x| mod.const_get(x) }
       described_class.build_schema
 
       @db = described_class.db
@@ -12,8 +13,7 @@ describe Zuora::SqliteConnector do
 
     it "builds a table schema for all Zuora::Object::Base classes" do
       result = @db.execute "SELECT t.sql sql FROM 'main'.sqlite_master t WHERE t.type='table'"
-      sqlite_system_tables = 1
-      result.length.should == @models.length + sqlite_system_tables
+      result.length.should == @models.length
     end
 
     it "creates a column for each attribute" do
