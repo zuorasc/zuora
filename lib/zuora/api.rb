@@ -76,7 +76,7 @@ module Zuora
     # @raise [Zuora::Fault]
     def authenticate!
       response = client.request(:login) do
-        ns = Zuora::Api.instance.client.soap.namespace_by_uri('http://api.zuora.com/')
+        ns = client.soap.namespace_by_uri('http://api.zuora.com/')
         soap.body = "<#{ns}:username>#{config.username}</#{ns}:username><#{ns}:password>#{config.password}</#{ns}:password>"
       end
       self.session = Zuora::Session.generate(response.to_hash)
