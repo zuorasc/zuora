@@ -48,13 +48,12 @@ module Zuora::Objects
         :created_date, :credit_card_mask_number, :last_failed_sale_transaction_date,
         :last_transaction_status, :name, :num_consecutive_failures, :updated_date,
         :total_number_of_error_payments, :total_number_of_processed_payments, :active,
-        :bank_city, :bank_code, :bank_name, :bank_postal_code, :bank_street_name,
-        :bank_street_number, :bank_transfer_account_name, :bank_transfer_account_number,
-        :bank_transfer_account_type, :bank_transfer_account_number, :bank_transfer_account_type,
-        :bank_transfer_type, :last_transaction_datetime, :payment_method_status
+        :bank_city, :bank_name, :bank_postal_code, :bank_street_name,
+        :bank_street_number, :bank_transfer_account_type, :last_transaction_datetime,
+        :payment_method_status
 
       write_only :ach_account_number, :credit_card_number, :credit_card_security_code,
-        :gateway_option_data, :skip_validation
+        :gateway_option_data, :skip_validation, :bank_transfer_account_number
 
       default_attributes :use_default_retry_rule => true
     end
