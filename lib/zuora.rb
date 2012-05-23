@@ -9,6 +9,7 @@ module Zuora
   require 'zuora/fault'
   require 'zuora/session'
   require 'zuora/api'
+  require 'zuora/api_failure'
   require 'zuora/validations'
   require 'zuora/associations'
   require 'zuora/attributes'

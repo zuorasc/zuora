@@ -154,8 +154,7 @@ describe Zuora::Objects::Account do
         a.payment_term = 'Due Upon Receipt'
         a.status = 'Draft'
         a.should be_valid
-        a.save.should == false
-        a.errors[:base].should include('The account number example-test-10 is invalid.')
+        expect { a.save }.to raise_error Zuora::ApiFailure
         a.id.should be_nil
       end
     end

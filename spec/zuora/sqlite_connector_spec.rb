@@ -13,7 +13,8 @@ describe Zuora::SqliteConnector do
 
     it "builds a table schema for all Zuora::Object::Base classes" do
       result = @db.execute "SELECT t.sql sql FROM 'main'.sqlite_master t WHERE t.type='table'"
-      result.length.should == @models.length
+      sys_tables = 1
+      result.length.should == @models.length + sys_tables
     end
 
     it "creates a column for each attribute" do

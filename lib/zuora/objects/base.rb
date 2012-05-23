@@ -167,11 +167,9 @@ module Zuora::Objects
         @changed_attributes.clear
         return true
       else
-        self.errors.add(:base, result[:errors][:message])
-        return false
+        raise Zuora::ApiFailure.new result[:errors][:message]
       end
     end
-
   end
 end
 
