@@ -2,7 +2,7 @@ module Zuora::Objects
   class Contact < Base
     belongs_to :account
 
-    validates_presence_of :account_id, :first_name, :last_name
+    validates_presence_of :first_name, :last_name
     validates_length_of :first_name, :maximum => 100
     validates_length_of :last_name, :maximum => 100
     validates_length_of :nick_name, :maximum => 100, :allow_nil => true

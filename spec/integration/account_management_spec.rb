@@ -6,7 +6,7 @@ describe "Account Management" do
 
     before :each do
       authenticate!
-      @account = Factory.create(:account, :account_number => generate_key)
+      @account = FactoryGirl.create(:account, :account_number => generate_key)
     end
 
     after :each do
@@ -15,7 +15,7 @@ describe "Account Management" do
 
     describe "adding and manipulating contacts" do
       it "is supported" do
-        contact = Factory.create(:contact, :account => @account)
+        contact = FactoryGirl.create(:contact, :account => @account)
         @account.bill_to = contact
         @account.sold_to = contact
         @account.save.should == true
@@ -27,23 +27,23 @@ describe "Account Management" do
 
     describe "supported payment methods" do
       it "includes credit cards" do
-        Factory.create(:payment_method_credit_card, :account => @account)
+        FactoryGirl.create(:payment_method_credit_card, :account => @account)
       end
 
       it "includes ACH" do
-        Factory.create(:payment_method_ach, :account => @account)
+        FactoryGirl.create(:payment_method_ach, :account => @account)
       end
 
       it "includes PayPal" do
         # TODO: This cannot work unless Zuora is set up with proper paypal configs.
-        # Factory.create(:payment_method_paypal, :account => @account)
+        # FactoryGirl.create(:payment_method_paypal, :account => @account)
       end
     end
   end
 
   describe "an active account fixture" do
     it "can be destroyed" do
-      account = Factory(:active_account, :account_number => generate_key)
+      account = FactoryGirl.create(:active_account, :account_number => generate_key)
       account.status.should == 'Active'
       account.destroy.should == true
     end

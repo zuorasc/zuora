@@ -2,5 +2,7 @@ doc
 *.swp
 .yardoc
 .rvmrc
+.rbenv-version
+gemfiles/*.gemfile.lock
 zuora.log
 Gemfile.lock

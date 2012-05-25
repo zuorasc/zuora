@@ -20,10 +20,6 @@ describe Zuora::Objects::Contact do
       subject.should_not be_valid
     end
 
-    it "requires account_id" do
-      subject.errors[:account_id].should include("can't be blank")
-    end
-
     it "requires first_name" do
       subject.errors[:first_name].should include("can't be blank")
     end

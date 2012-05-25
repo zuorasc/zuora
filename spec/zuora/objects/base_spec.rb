@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-class ExampleObject < Zuora::Objects::Base
+class SomeExampleObject < Zuora::Objects::Base
 end
 
-class ExampleConnector
+class SomeExampleConnector
   def initialize(model)
   end
 end
@@ -11,12 +11,12 @@ end
 describe Zuora::Objects::Base do
   describe :connector do
     it "uses SoapConnector by default" do
-      ExampleObject.connector.should be_a Zuora::SoapConnector
+      SomeExampleObject.connector.should be_a Zuora::SoapConnector
     end
 
     it "allows injecting different class for tests" do
-      described_class.connector_class = ExampleConnector
-      ExampleObject.connector.should be_a ExampleConnector
+      described_class.connector_class = SomeExampleConnector
+      SomeExampleObject.connector.should be_a SomeExampleConnector
       #reset for subsequent tests
       described_class.connector_class = Zuora::SoapConnector
     end

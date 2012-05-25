@@ -1,5 +1,3 @@
-require 'fattr'
-
 module Zuora
   module Attributes
     def self.included(base)
@@ -16,12 +14,23 @@ module Zuora
       # can be applied to those attributes.
       def define_attributes(&block)
         yield self
-        fattrs class_variable_get(:@@wsdl_attributes)
         class_variable_get(:@@wsdl_attributes).each do |attr|
-          # writable attributes with dirty support
           class_eval <<-EVAL
+            @@all_attributes << "#{attr}".to_sym
+
+            define_method "#{attr}" do
+              @#{attr}
+            end
+
+            define_method "#{attr}?" do
+              #{attr} ? true : false
+            end
+
+            # writable attributes with dirty support
             define_method "#{attr}=" do |value|
-              #{attr}_will_change! unless value == @#{attr}
+              return if value == @#{attr}
+
+              #{attr}_will_change!
               @#{attr} = value
             end
           EVAL
@@ -45,6 +54,29 @@ module Zuora
             alias_method_chain :#{scope}, :complex
           EVAL
         end
+      end
+
+      # Store attr_accessor and their values
+      def store_accessors(storage_name)
+        class_eval <<-EVAL, __FILE__, __LINE__ + 1
+          define_method "#{storage_name}" do
+            @#{storage_name} ||= {}
+          end
+
+          define_method "#{storage_name}=" do |value|
+            @#{storage_name} = value
+          end
+
+          def attr_accessor(attribute)
+            super
+
+            define_method "\#{attribute}=" do |value|
+              #{storage_name}[attribute] = value
+              @@all_attributes << attribute.to_sym
+              super
+            end
+          end
+        EVAL
       end
 
       # define read only attributes which will not be sent
@@ -90,7 +122,7 @@ module Zuora
       alias_method :restrain_attributes, :restrain
 
       def attributes
-        self.fattrs.map(&:to_sym)
+        class_variable_get(:@@all_attributes).map(&:to_sym)
       end
 
       # the name to use when referencing remote Zuora objects
@@ -113,6 +145,7 @@ module Zuora
         subclass.send(:class_variable_set, :@@restrain_attributes, [])
         subclass.send(:class_variable_set, :@@write_only_attributes, [])
         subclass.send(:class_variable_set, :@@deferred_attributes, [])
+        subclass.send(:class_variable_set, :@@all_attributes, [])
 
         subclass.send(:define_attribute_methods, wsdl_attrs)
       end
@@ -162,7 +195,7 @@ module Zuora
 
     # a hash representation of all attributes including their values
     def attributes
-      self.class.fattrs.inject({}){|h,a| h.update a.to_sym => send(a)}
+      self.class.attributes.inject({}){|h,a| h.update a.to_sym => send(a)}
     end
     alias_method :to_hash, :attributes
 

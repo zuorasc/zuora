@@ -11,6 +11,6 @@ describe "Product Catalog" do
   end
   
   it "creates a product catalog" do
-    product_catalog = Factory.create(:product_catalog, :name => @product_name)
+    product_catalog = FactoryGirl.create(:product_catalog, :name => @product_name)
   end
 end
