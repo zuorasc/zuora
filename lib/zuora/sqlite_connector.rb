@@ -10,6 +10,7 @@ module Zuora
     end
 
     def query(sql)
+      sql = sql.gsub /select .* from/, 'select * from'
       result = db.query sql
       hashed_result = result.map {|r| hash_result_row(r, result) }
       {
@@ -151,7 +152,7 @@ module Zuora
       attributes = attributes.map do |a|
         "'#{a.to_s.camelize}' text"
       end
-      autoid = "'Id' integer primary key"
+      autoid = "'Id' integer primary key autoincrement"
       attributes.unshift autoid
       attributes = attributes.join(", ")
       schema = "CREATE TABLE 'main'.'#{table_name}' (#{attributes});"
