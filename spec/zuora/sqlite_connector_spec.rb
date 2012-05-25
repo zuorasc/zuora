@@ -37,7 +37,7 @@ describe Zuora::SqliteConnector do
       Zuora::Objects::Base.connector_class = old_class
     end
 
-    describe :where do
+    describe "Arel like methods" do
       before :each do
         @model = Zuora::Objects::Product
         @db = described_class.db
@@ -48,12 +48,24 @@ describe Zuora::SqliteConnector do
         @product2.create
       end
 
-      it "returns matching records" do
-        records = @model.where(:name => 'Product One')
-        records.first.name.should == @product1.name
-        records.first.id.should == @product1.id
+      describe :where do
+        it "returns matching records" do
+          records = @model.where(:name => 'Product One')
+          records.first.name.should == @product1.name
+          records.first.id.should == @product1.id
+        end
+      end
+
+      describe :select do
+        it "returns only selected fields" do
+          records = @model.select([:id, :name]).where(:name => 'Product One')
+          records.first.name.should == @product1.name
+          records.first.id.should == @product1.id
+          records.first.description.should == nil
+        end
       end
     end
+
 
     describe :create do
       before :each do
