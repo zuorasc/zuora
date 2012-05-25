@@ -70,7 +70,7 @@ module Zuora::Objects
       self.class.ons
     end
 
-    # select fields to retreive from query
+    # select fields to retrieve from query
     def self.select(select)
       @select = select
       self
@@ -89,6 +89,8 @@ module Zuora::Objects
 
       result = self.connector.query(sql)
 
+      # reset @select after query to not propagate value for next queries
+      @select = []
       generate(result.to_hash, :query_response)
     end
 
@@ -173,8 +175,7 @@ module Zuora::Objects
         @changed_attributes.clear
         return true
       else
-        self.errors.add(:base, result[:errors][:message])
-        return false
+        raise Zuora::ApiFailure.new result[:errors][:message]
       end
     end
 
