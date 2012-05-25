@@ -10,6 +10,7 @@ module Zuora
     end
 
     def query(sql)
+      sql = sql.gsub /select .* from/, 'select * from'
       result = db.query sql
       hashed_result = result.map {|r| hash_result_row(r, result) }
       {
@@ -86,6 +87,35 @@ module Zuora
       }
     end
 
+    def subscribe
+      [
+        :account,
+        :subscription,
+        :bill_to_contact,
+        :payment_method,
+        :sold_to_contact,
+        :product_rate_plan
+      ].each do |relation|
+        obj = @model.send(relation)
+        if obj
+          if obj.new_record?
+            obj.create
+          else
+            obj.update
+          end
+        end
+      end
+
+      {
+        :subscribe_response => {
+          :result => {
+            :success => true,
+            :id => nil
+          }
+        }
+      }
+    end
+
     def parse_attributes(type, attrs = {})
       data = attrs.to_a.map do |a|
         key, value = a
@@ -111,8 +141,8 @@ module Zuora
     end
 
     def self.generate_tables
-      Zuora::Objects::Base.subclasses.each do |model|
-        create_table(model)
+      Zuora::Objects.constants.select { |c| c != :Base }.each do |model|
+        create_table(Zuora::Objects.const_get(model))
       end
     end
 
@@ -122,7 +152,7 @@ module Zuora
       attributes = attributes.map do |a|
         "'#{a.to_s.camelize}' text"
       end
-      autoid = "'Id' integer PRIMARY KEY AUTOINCREMENT"
+      autoid = "'Id' integer primary key autoincrement"
       attributes.unshift autoid
       attributes = attributes.join(", ")
       schema = "CREATE TABLE 'main'.'#{table_name}' (#{attributes});"

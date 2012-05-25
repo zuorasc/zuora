@@ -7,7 +7,7 @@ module Zuora::Objects
     has_many :rate_plans
 
     validates_presence_of :contract_effective_date, :initial_term,
-                          :renewal_term, :term_start_date
+                          :renewal_term
 
     validates_inclusion_of    :auto_renew, :in => [true, false]
     validates_datetime_of     :cancelled_date, :allow_nil => true

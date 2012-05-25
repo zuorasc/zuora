@@ -31,7 +31,7 @@ describe Zuora::Objects::PaymentMethod do
   describe "write only attributes" do
     ach = FactoryGirl.build(:payment_method_ach)
     ach.write_only_attributes.should == [:ach_account_number, :credit_card_number,
-      :credit_card_security_code, :gateway_option_data, :skip_validation]
+      :credit_card_security_code, :gateway_option_data, :skip_validation, :bank_transfer_account_number]
   end
 
   describe "Credit Card" do

@@ -4,7 +4,8 @@ require 'zuora/sqlite_connector'
 describe Zuora::SqliteConnector do
   describe :build_schema do
     before :each do
-      @models = Zuora::Objects::Base.subclasses
+      mod = Zuora::Objects
+      @models = mod.constants.select { |x| mod.const_defined?(x) && mod.const_get(x) < mod::Base }.map { |x| mod.const_get(x) }
       described_class.build_schema
 
       @db = described_class.db
@@ -12,8 +13,8 @@ describe Zuora::SqliteConnector do
 
     it "builds a table schema for all Zuora::Object::Base classes" do
       result = @db.execute "SELECT t.sql sql FROM 'main'.sqlite_master t WHERE t.type='table'"
-      sqlite_system_tables = 1
-      result.length.should == @models.length + sqlite_system_tables
+      sys_tables = 1
+      result.length.should == @models.length + sys_tables
     end
 
     it "creates a column for each attribute" do
@@ -37,7 +38,7 @@ describe Zuora::SqliteConnector do
       Zuora::Objects::Base.connector_class = old_class
     end
 
-    describe :where do
+    describe "Arel like methods" do
       before :each do
         @model = Zuora::Objects::Product
         @db = described_class.db
@@ -48,12 +49,24 @@ describe Zuora::SqliteConnector do
         @product2.create
       end
 
-      it "returns matching records" do
-        records = @model.where(:name => 'Product One')
-        records.first.name.should == @product1.name
-        records.first.id.should == @product1.id
+      describe :where do
+        it "returns matching records" do
+          records = @model.where(:name => 'Product One')
+          records.first.name.should == @product1.name
+          records.first.id.should == @product1.id
+        end
+      end
+
+      describe :select do
+        it "returns only selected fields" do
+          records = @model.select([:id, :name]).where(:name => 'Product One')
+          records.first.name.should == @product1.name
+          records.first.id.should == @product1.id
+          records.first.description.should == nil
+        end
       end
     end
+
 
     describe :create do
       before :each do
@@ -118,16 +131,38 @@ describe Zuora::SqliteConnector do
       end
     end
 
-      describe "factories" do
-        before :each do
-          @product = Factory(:product)
-        end
+    describe :subscribe do
+      before :each do
+        described_class.build_schema
+        @acc = Zuora::Objects::Account.new
+        @subscription = Zuora::Objects::Subscription.new
+        @bill_to_contact = Zuora::Objects::Contact.new
+        @payment_method = Zuora::Objects::PaymentMethod.new
+        @sold_to_contact = Zuora::Objects::Contact.new
+        @product_rate_plan = Zuora::Objects::ProductRatePlan.new
 
-        it "should exists" do
-          @product.should be
-        end
+        @model = Zuora::Objects::SubscribeRequest.new
+        @model.account = @acc
+        @model.subscription = @subscription
+        @model.bill_to_contact = @bill_to_contact
+        @model.payment_method = @payment_method
+        @model.sold_to_contact = @sold_to_contact
+        @model.product_rate_plan = @product_rate_plan
       end
-  end
 
+      it "calls create on all of the related objects" do
+        @acc.should_receive(:create)
+        @subscription.should_receive(:create)
+        @bill_to_contact.should_receive(:create)
+        @payment_method.should_receive(:create)
+        @sold_to_contact.should_receive(:create)
+        @product_rate_plan.should_receive(:create)
+
+        @model.stub(:valid?).and_return(true)
+        @model.create
+      end
+
+    end
+  end
 
 end
