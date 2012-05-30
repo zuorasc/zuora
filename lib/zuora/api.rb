@@ -22,7 +22,9 @@ module Zuora
   class Api
     include Singleton
     # @return [Savon::Client]
-    attr_accessor :client
+    def client
+      @client ||= make_client
+    end
 
     # @return [Zuora::Session]
     attr_accessor :session
@@ -89,9 +91,11 @@ module Zuora
       Savon.configure do |savon|
         savon.soap_version = 2
       end
+    end
 
-      self.client = Savon::Client.new do
-        wsdl.document = WSDL
+    def make_client
+      Savon::Client.new do
+        wsdl.document = (defined?(ZUORA_WSDL) && ZUORA_WSDL) || WSDL
         http.auth.ssl.verify_mode = :none
       end
     end
