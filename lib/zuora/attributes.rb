@@ -204,7 +204,7 @@ module Zuora
       @changed_attributes = {}
       self
     end
-    
+
     # the name to use when referencing remote Zuora objects
     def remote_name
       self.class.name.base_name

@@ -6,12 +6,21 @@ describe Zuora::Api do
       Zuora::Api.any_instance.stub(:authenticated?).and_return(true)
     end
 
-    it "has readable WSDL" do
-      File.exists?(Zuora::Api::WSDL).should be
+    it "has readable production WSDL" do
+      File.exists?(Zuora::Api::PRODUCTION_WSDL).should be
     end
 
-    it "uses provided WSDL" do
+    it "has readable sandbox WSDL" do
+      File.exists?(Zuora::Api::SANDBOX_WSDL).should be
+    end
+
+    it "uses production WSDL by default" do
       Zuora::Api.instance.client.wsdl.endpoint.to_s.should == "https://www.zuora.com/apps/services/a/38.0"
+    end
+
+    it "can be configured to use sandbox WSDL" do
+      Zuora.configure(:username => 'example', :password => 'test', :sandbox => true)
+      Zuora::Api.instance.client.wsdl.endpoint.to_s.should == "https://apisandbox.zuora.com/apps/services/a/38.0"
     end
 
     it "can be configured multiple times" do
@@ -23,7 +32,7 @@ describe Zuora::Api do
       Zuora::Api.instance.config.password.should == 'changed'
     end
   end
-  
+
   describe "logger support" do
     it "allows using custom logger" do
       MockResponse.responds_with(:valid_login) do

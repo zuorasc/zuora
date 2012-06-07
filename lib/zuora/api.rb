@@ -17,10 +17,15 @@ module Zuora
       savon.logger = opts[:logger]
       savon.log = opts[:logger] ? true : false
     end
+
+    if Api.instance.config.sandbox
+      Api.instance.sandbox!
+    end
   end
 
   class Api
     include Singleton
+
     # @return [Savon::Client]
     def client
       @client ||= make_client
@@ -32,12 +37,19 @@ module Zuora
     # @return [Zuora::Config]
     attr_accessor :config
 
-    WSDL = File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
+    PRODUCTION_WSDL = File.expand_path('../../../wsdl/production/zuora.a.38.0.wsdl', __FILE__)
+    SANDBOX_WSDL    = File.expand_path('../../../wsdl/sandbox/zuora.a.38.0.wsdl', __FILE__)
 
     # Is this an authenticated session?
     # @return [Boolean]
     def authenticated?
       self.session.try(:active?)
+    end
+
+    # Change client to sandbox url
+    def sandbox!
+      @client = nil
+      self.class.instance.client.wsdl.document = SANDBOX_WSDL
     end
 
     # The XML that was transmited in the last request
@@ -95,7 +107,7 @@ module Zuora
 
     def make_client
       Savon::Client.new do
-        wsdl.document = (defined?(ZUORA_WSDL) && ZUORA_WSDL) || WSDL
+        wsdl.document = defined?(ZUORA_WSDL) ? ZUORA_WSDL : PRODUCTION_WSDL
         http.auth.ssl.verify_mode = :none
       end
     end
