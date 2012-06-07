@@ -90,7 +90,7 @@ module Zuora
     def authenticate!
       response = client.request(:login) do
         ns = Zuora::Api.instance.client.soap.namespace_by_uri('http://api.zuora.com/')
-        soap.body = "<#{ns}:username>#{config.username}</#{ns}:username><#{ns}:password>#{config.password}</#{ns}:password>"
+        soap.body = "<#{ns}:username>#{Zuora::Api.instance.config.username}</#{ns}:username><#{ns}:password>#{Zuora::Api.instance.config.password}</#{ns}:password>"
       end
       self.session = Zuora::Session.generate(response.to_hash)
     rescue Savon::SOAP::Fault => e
