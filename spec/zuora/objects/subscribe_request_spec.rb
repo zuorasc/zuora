@@ -25,7 +25,7 @@ describe Zuora::Objects::SubscribeRequest do
       end
 
       MockResponse.responds_with(:payment_method_credit_card_find_success) do
-        subject.product_rate_plan = Zuora::Objects::ProductRatePlan.find('stub')
+        subject.product_rate_plans = [Zuora::Objects::ProductRatePlan.find('stub')]
       end
 
       subject.subscription = FactoryGirl.build(:subscription)
