@@ -27,5 +27,17 @@ describe Zuora::Objects::Base do
       Zuora::Objects::Invoice.new.includes_usage.should be_true
       Zuora::Objects::Invoice.new(:includes_usage => false).includes_usage.should be_false
     end
+
+    it "assigns attributes from passed in hash" do
+      Zuora::Objects::Account.new(:name => "Test Name").name.should == "Test Name"
+    end
+  end
+
+  describe "attributes=" do
+    it "should assign attributes to an existing instance from passed in hash" do
+      account = Zuora::Objects::Account.new(:name => "Test Name")
+      account.attributes = {:name => "New Name"}
+      account.name.should == "New Name"
+    end
   end
 end
