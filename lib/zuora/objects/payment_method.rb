@@ -23,7 +23,7 @@ module Zuora::Objects
     validates_length_of       :credit_card_postal_code, :maximum => 20, :if => :card?
     validates_length_of       :credit_card_country, :maximum => 40, :allow_nil => true, :if => :card?
     validates_numericality_of :credit_card_expiration_month, :integer_only => true, :within => 1..12, :if => :card?
-    validates_numericality_of :credit_card_expiration_year, :integer_only => true, :greater_than => lambda{|e| Date.today.year }, :if => :card?
+    validates_numericality_of :credit_card_expiration_year, :integer_only => true, :greater_than => lambda{|e| (Date.today - 1.year).year }, :if => :card?
     validates_length_of       :credit_card_holder_name, :maximum => 50, :if => :card?
     validates_length_of       :credit_card_number, :maximum => 16, :if => :card?
     validates_inclusion_of    :credit_card_type, :in => %w(AmericanExpress Discover MasterCard Visa), :if => :card?
