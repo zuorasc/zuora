@@ -9,10 +9,14 @@ module Zuora::Objects
     # generate a new instance of a Zuora object
     def initialize(attrs={}, &block)
       apply_default_attributes
+      self.attributes = attrs
+      yield self if block_given?
+    end
+
+    def attributes=(attrs={})
       attrs.each do |name, value|
         self.send("#{name.to_s.underscore}=", value)
       end
-      yield self if block_given?
     end
 
     # given a soap response hash, initialize a record
