@@ -34,10 +34,33 @@ describe Zuora::Objects::PaymentMethod do
       :credit_card_security_code, :gateway_option_data, :skip_validation]
   end
 
+  describe "validations" do
+    describe "credit_card_expiration_year" do
+      let(:payment_method) {Zuora::Objects::PaymentMethod.new(:type => "CreditCard")}
+      it "should allow this year" do
+        payment_method.credit_card_expiration_year = Time.now.year
+        payment_method.valid?
+        payment_method.errors[:credit_card_expiration_year].should_not include("must be greater than #{(Time.now - 1.year).year}")
+      end
+
+      it "should not allow last year" do
+        payment_method.credit_card_expiration_year = (Time.now - 1.year).year
+        payment_method.valid?
+        payment_method.errors[:credit_card_expiration_year].should include("must be greater than #{(Time.now - 1.year).year}")
+      end
+
+      it "should allow next year" do
+        payment_method.credit_card_expiration_year = (Time.now + 1.year).year
+        payment_method.valid?
+        payment_method.errors[:credit_card_expiration_year].should_not include("must be greater than #{(Time.now - 1.year).year}")
+      end
+    end
+  end
+
   describe "Credit Card" do
     it "generates proper request xml" do
       MockResponse.responds_with(:payment_method_credit_card_create_success) do
-        
+
         FactoryGirl.create(:payment_method_credit_card, :account => @account)
 
         xml = Zuora::Api.instance.last_request
