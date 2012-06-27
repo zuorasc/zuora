@@ -40,19 +40,19 @@ describe Zuora::Objects::PaymentMethod do
       it "should allow this year" do
         payment_method.credit_card_expiration_year = Time.now.year
         payment_method.valid?
-        payment_method.errors[:credit_card_expiration_year].should_not include("must be greater than #{(Time.now - 1.year).year}")
+        payment_method.errors[:credit_card_expiration_year].should_not include("must be greater than or equal to #{Time.now.year}")
       end
 
       it "should not allow last year" do
         payment_method.credit_card_expiration_year = (Time.now - 1.year).year
         payment_method.valid?
-        payment_method.errors[:credit_card_expiration_year].should include("must be greater than #{(Time.now - 1.year).year}")
+        payment_method.errors[:credit_card_expiration_year].should include("must be greater than or equal to #{Time.now.year}")
       end
 
       it "should allow next year" do
         payment_method.credit_card_expiration_year = (Time.now + 1.year).year
         payment_method.valid?
-        payment_method.errors[:credit_card_expiration_year].should_not include("must be greater than #{(Time.now - 1.year).year}")
+        payment_method.errors[:credit_card_expiration_year].should_not include("must be greater than or equal to #{Time.now.year}")
       end
     end
   end
