@@ -80,6 +80,12 @@ module Zuora::Objects
       apply_response(result.to_hash, :subscribe_response)
     end
 
+    # method to support backward compatibility of a single
+    # product_rate_plan
+    def product_rate_plan=(rate_plan_object)
+      self.product_rate_plans = [rate_plan_object]
+    end
+
     protected
 
     def apply_response(response_hash, type)
@@ -146,12 +152,6 @@ module Zuora::Objects
       subscribe_options.each do |k,v|
         builder.__send__(ons, k.to_s.camelize.to_sym, v)
       end
-    end
-
-    # method to support backward compatibility of a single
-    # product_rate_plan
-    def product_rate_plan=(rate_plan_object)
-      self.product_rate_plans = [rate_plan_object]
     end
 
     # TODO: Restructute an intermediate class that includes
