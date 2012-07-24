@@ -94,7 +94,7 @@ module Zuora::Objects
     def generate_bill_to_contact(builder)
       if bill_to_contact.new_record?
         bill_to_contact.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
         end
       else
         builder.__send__(ons, :Id, bill_to_contact.id)
@@ -104,7 +104,7 @@ module Zuora::Objects
     def generate_sold_to_contact(builder)
       if sold_to_contact.new_record?
         sold_to_contact.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
         end
       else
         builder.__send__(ons, :Id, sold_to_contact.id)
@@ -114,7 +114,7 @@ module Zuora::Objects
     def generate_account(builder)
       if account.new_record?
         account.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
         end
       else
         builder.__send__(ons, :Id, account.id)
@@ -124,7 +124,7 @@ module Zuora::Objects
     def generate_payment_method(builder)
       if payment_method.new_record?
         payment_method.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
         end
       else
         builder.__send__(ons, :Id, payment_method.id)
@@ -133,13 +133,13 @@ module Zuora::Objects
 
     def generate_subscription(builder)
       subscription.to_hash.each do |k,v|
-        builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+        builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
       end
     end
 
     def generate_subscribe_options(builder)
       subscribe_options.each do |k,v|
-        builder.__send__(ons, k.to_s.camelize.to_sym, v)
+        builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v)
       end
     end
 
