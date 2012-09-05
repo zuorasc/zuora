@@ -36,7 +36,7 @@ module Zuora::Objects
     define_attributes do
       read_only :bank_identification_number, :created_by_id, :created_date, :gateway_response,
         :gateway_response_code, :updated_by_id, :updated_date
-        write_only :applied_invoice_amount,:gateway_option_data, :invoice_id
+        write_only :applied_invoice_amount,:gateway_option_data, :invoice_id, :invoice_number
     end
   end
 end
