@@ -79,12 +79,26 @@ module Zuora::Objects
     # generate the sql queries. This may be overcome in the future.
     def self.where(where)
       keys = (attributes - unselectable_attributes).map(&:to_s).map(&:camelcase)
-      if where.is_a?(Hash)
-        # FIXME: improper inject usage.
-        where = where.inject([]){|t,v| t << "#{v[0].to_s.camelcase} = '#{v[1]}'"}.sort.join(' and ')
-      end
-      sql = "select #{keys.join(', ')} from #{remote_name} where #{where}"
+      where_clause = where
 
+      if where.is_a?(Hash)
+        parts = []
+
+        where.each do |k, v|
+          attribute = k.to_s.camelcase
+
+          if v.kind_of?(Array)
+            disjunction = v.join("' or #{attribute} = '")
+            parts << "#{attribute} = '#{disjunction}'"
+          else
+            parts << "#{attribute} = '#{v}'"
+          end
+        end
+
+        where_clause = parts.sort.join(' and ')
+      end
+
+      sql = "select #{keys.join(', ')} from #{remote_name} where #{where_clause}"
       result = self.connector.query(sql)
 
       generate(result.to_hash, :query_response)

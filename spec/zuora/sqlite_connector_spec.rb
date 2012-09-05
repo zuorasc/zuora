@@ -48,10 +48,21 @@ describe Zuora::SqliteConnector do
         @product2.create
       end
 
-      it "returns matching records" do
+      it "returns matching records for single term" do
         records = @model.where(:name => 'Product One')
         records.first.name.should == @product1.name
         records.first.id.should == @product1.id
+      end
+
+      it "returns matching records for multiple terms" do
+        # Sort the results because determinism in tests is a fine quality.
+        records = @model.where(:name => ['Product One', 'Another One']).sort { |x,y| x.name <=> y.name }
+
+        records.first.name.should == @product2.name
+        records.first.id.should == @product2.id
+
+        records.last.name.should == @product1.name
+        records.last.id.should == @product1.id
       end
     end
 

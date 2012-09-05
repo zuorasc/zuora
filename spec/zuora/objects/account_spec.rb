@@ -85,6 +85,16 @@ describe Zuora::Objects::Account do
           with_value(/select .+ from Account where Id = 'test' and Name = 'Bob'/)
       end
     end
+
+    it "supports disjunctions in hash based lookups" do
+      MockResponse.responds_with(:account_find_success) do
+        Zuora::Objects::Account.where(:id => ['test', 'Bob'])
+        xml = Zuora::Api.instance.last_request
+        ns = zuora_namespace('http://api.zuora.com/')
+        xml.should have_xml("//env:Body/#{zns}:query/#{zns}:queryString").
+                       with_value(/select .+ from Account where Id = 'test' or Id = 'Bob'/)
+      end
+    end
   end
 
   describe "updating a remote object" do
