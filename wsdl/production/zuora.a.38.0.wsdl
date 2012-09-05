@@ -695,8 +695,6 @@
 		      			 <element minOccurs="0" name="Description" nillable="true" type="string" />
 		    			 <element minOccurs="0" name="EndDateTime" nillable="true" type="dateTime" />
                          <element minOccurs="0" name="ImportId" nillable="true" type="zns:ID" />
-		    			 <element minOccurs="0" name="InvoiceId" nillable="true" type="zns:ID" />
-		    			 <element minOccurs="0" name="InvoiceNumber" nillable="true" type="string" />
 		       			 <element minOccurs="0" name="Quantity" nillable="true" type="decimal" />
 		       			 <element minOccurs="0" name="RbeStatus" nillable="true" type="string"/>
 		    			 <element minOccurs="0" name="SourceName" nillable="true" type="string" />
