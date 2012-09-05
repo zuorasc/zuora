@@ -97,6 +97,15 @@ module Zuora::Objects
 
       generate(result.to_hash, :query_response)
     end
+    #where clause as a string to do >, <, != operators
+    def self.where_s(where)
+      keys = (attributes - unselectable_attributes).map(&:to_s).map(&:zuora_camelize)
+      sql = "select #{keys.join(', ')} from #{remote_name} where #{where}"
+
+      result = self.connector.query(sql)
+
+      generate(result.to_hash, :query_response)
+    end
 
     # has this record not been saved?
     def new_record?
