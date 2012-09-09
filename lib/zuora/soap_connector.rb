@@ -13,11 +13,23 @@ module Zuora
       end
     end
 
+    def serialize(xml, key, value)
+      if value.kind_of?(Zuora::Objects::Base)
+        xml.__send__(zns, key.to_sym) do |child|
+          value.to_hash.each do |k, v|
+            serialize(child, k.to_s.camelize, v) unless v.nil?
+          end
+        end
+      else
+        xml.__send__(ons, key.to_sym, value)
+      end
+    end
+
     def create
       Zuora::Api.instance.request(:create) do |xml|
         xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
           @model.to_hash.each do |k,v|
-            a.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+            serialize(a, k.to_s.camelize.to_sym, v) unless v.nil?
           end
           generate_complex_objects(a, :create)
         end
@@ -43,6 +55,19 @@ module Zuora
       Zuora::Api.instance.request(:delete) do |xml|
         xml.__send__(zns, :type, remote_name)
         xml.__send__(zns, :ids, id)
+      end
+    end
+
+    def amend
+      Zuora::Api.instance.request(:amend) do |xml|
+        xml.__send__(zns, :requests) do |r|
+          r.__send__(zns, :Amendments) do |a|
+            @model.to_hash.each do |k,v|
+              serialize(a, k.to_s.camelize.to_sym, v) unless v.nil?
+            end
+            generate_complex_objects(a, :create)
+          end
+        end
       end
     end
 
