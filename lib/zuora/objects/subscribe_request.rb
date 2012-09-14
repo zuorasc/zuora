@@ -81,6 +81,7 @@ module Zuora::Objects
     def apply_response(response_hash, type)
       result = response_hash[type][:result]
       if result[:success]
+        subscription.account_id = result[:account_id]
         subscription.id = result[:subscription_id]
         subscription.clear_changed_attributes!
         @previously_changed = changes
