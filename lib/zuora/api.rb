@@ -37,8 +37,7 @@ module Zuora
     # @return [Zuora::Config]
     attr_accessor :config
 
-    PRODUCTION_WSDL = File.expand_path('../../../wsdl/production/zuora.a.38.0.wsdl', __FILE__)
-    SANDBOX_WSDL    = File.expand_path('../../../wsdl/sandbox/zuora.a.38.0.wsdl', __FILE__)
+    WSDL = File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
 
     # Is this an authenticated session?
     # @return [Boolean]
@@ -49,7 +48,7 @@ module Zuora
     # Change client to sandbox url
     def sandbox!
       @client = nil
-      self.class.instance.client.wsdl.document = SANDBOX_WSDL
+      self.class.instance.client.wsdl.endpoint = "https://apisandbox.zuora.com/apps/services/a/38.0"
     end
 
     # The XML that was transmited in the last request
@@ -107,7 +106,7 @@ module Zuora
 
     def make_client
       Savon::Client.new do
-        wsdl.document = defined?(SANDBOX_WSDL) ? SANDBOX_WSDL : PRODUCTION_WSDL
+        wsdl.document = WSDL
         http.auth.ssl.verify_mode = :none
       end
     end

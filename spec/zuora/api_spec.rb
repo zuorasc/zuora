@@ -6,16 +6,8 @@ describe Zuora::Api do
       Zuora::Api.any_instance.stub(:authenticated?).and_return(true)
     end
 
-    it "has readable production WSDL" do
-      File.exists?(Zuora::Api::PRODUCTION_WSDL).should be
-    end
-
-    it "has readable sandbox WSDL" do
-      File.exists?(Zuora::Api::SANDBOX_WSDL).should be
-    end
-
-    it "uses production WSDL by default" do
-      Zuora::Api.instance.client.wsdl.endpoint.to_s.should == "https://www.zuora.com/apps/services/a/38.0"
+    it "has readable WSDL" do
+      File.exists?(Zuora::Api::WSDL).should be
     end
 
     it "can be configured to use sandbox WSDL" do
