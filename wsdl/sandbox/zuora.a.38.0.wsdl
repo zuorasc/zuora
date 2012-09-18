@@ -706,6 +706,7 @@
 		       			 <element minOccurs="0" name="UOM" nillable="true" type="string" />
 		                 <element minOccurs="0" name="UpdatedById" nillable="true" type="zns:ID"  />
 		                 <element minOccurs="0" name="UpdatedDate" nillable="true" type="dateTime"  />
+		                 <element minOccurs="0" name="Client_Name__c" nillable="true" type="string" />
 	                 </sequence>
 	            </extension>
 	           </complexContent>

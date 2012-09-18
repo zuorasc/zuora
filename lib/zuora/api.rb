@@ -107,7 +107,7 @@ module Zuora
 
     def make_client
       Savon::Client.new do
-        wsdl.document = defined?(ZUORA_WSDL) ? ZUORA_WSDL : PRODUCTION_WSDL
+        wsdl.document = defined?(SANDBOX_WSDL) ? SANDBOX_WSDL : PRODUCTION_WSDL
         http.auth.ssl.verify_mode = :none
       end
     end
