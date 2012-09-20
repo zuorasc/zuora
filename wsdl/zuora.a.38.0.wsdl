@@ -708,8 +708,6 @@
 		                 <element minOccurs="0" name="UpdatedDate" nillable="true" type="dateTime"  />
 		                 <element minOccurs="0" name="Client_Name__c" nillable="true" type="string" />
 		                 <element minOccurs="0" name="Client_ID__c" nillable="true" type="string" />
-		                 <element minOccurs="0" name="ClientName__c" nillable="true" type="string" />
-		                 <element minOccurs="0" name="ClientID__c" nillable="true" type="string" />
 	                 </sequence>
 	            </extension>
 	           </complexContent>
