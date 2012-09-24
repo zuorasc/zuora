@@ -147,6 +147,10 @@ module Zuora::Objects
       end
     end
 
+    # method to support backward compatibility of a single product rate plan
+    def product_rate_plan=(rate_plan_object)
+      self.product_rate_plans = [rate_plan_object]
+    end
     # TODO: Restructute an intermediate class that includes
     # persistence only within ZObject models.
     # These methods are not relevant, but defined in Base
