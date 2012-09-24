@@ -8,6 +8,7 @@ module Zuora::Objects
     attr_accessor :product_rate_plans
 
     store_accessors :subscribe_options
+    store_accessors :preview_options
 
     validate do |request|
       request.must_have_usable(:account)
@@ -45,6 +46,10 @@ module Zuora::Objects
           s.__send__(zns, :Account) do |a|
             generate_object(a, account)
           end
+
+          s.__send__(zns, :PreviewOptions) do |po|
+            generate_preview_options(po)
+          end unless preview_options.blank?
 
           s.__send__(zns, :SubscribeOptions) do |so|
             generate_subscribe_options(so)
@@ -123,6 +128,13 @@ module Zuora::Objects
         builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v)
       end
     end
+    
+    def generate_preview_options(builder)
+      preview_options.each do |k,v|
+        builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v)
+      end
+    end
+
 
     # TODO: Restructute an intermediate class that includes
     # persistence only within ZObject models.

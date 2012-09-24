@@ -183,6 +183,19 @@ describe Zuora::Objects::SubscribeRequest do
         with_value(true)
     end
 
+    it "supports preview options" do
+      MockResponse.responds_with(:subscribe_request_success) do
+        subject.preview_options = {:enable_preview_mode => true, :number_of_periods => 1}
+        subject.should be_valid
+        subject.create.should == true
+      end
+
+      xml = Zuora::Api.instance.last_request
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PreviewOptions/#{ons}:EnablePreviewMode").
+        with_value(true)
+    end
+
+
     it "applies valid response data to the proper nested objects and resets dirty" do
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid
