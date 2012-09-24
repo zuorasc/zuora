@@ -9,6 +9,74 @@ describe Zuora::Objects::SubscribeRequest do
       end
     end
   end
+  describe "#product_rate_plan=" do
+    it "should assign product_rate_plans as an array containing the object" do
+      MockResponse.responds_with(:payment_method_credit_card_find_success) do
+        @product_rate_plan = Zuora::Objects::ProductRatePlan.find('stub')
+      end
+      request = Zuora::Objects::SubscribeRequest.new
+      request.product_rate_plan = @product_rate_plan
+      request.product_rate_plans.should eql [@product_rate_plan]
+    end
+  end
+  
+  describe "validations" do
+    describe "#must_have_usable" do
+      context "on account (being a reasonable representation of non-array objects)" do
+        before do
+          @account = Zuora::Objects::Account.new
+          @request = Zuora::Objects::SubscribeRequest.new(:account => @account)
+        end
+
+        it "should add errors when there are problems with account" do
+          @account.should_receive(:valid?).and_return(false)
+          @request.must_have_usable(:account)
+          @request.errors[:account].should include("is invalid")
+        end
+
+        it "should not add errors when there are no problems with account" do
+          @account.should_receive(:valid?).and_return(true)
+          @request.must_have_usable(:account)
+          @request.errors[:account].should be_blank
+        end
+      end
+
+      context "on product_rate_plans (being an array pbject)" do
+        before do
+          @rate_plan1 = Zuora::Objects::ProductRatePlan.new
+          @rate_plan2 = Zuora::Objects::ProductRatePlan.new
+          @request = Zuora::Objects::SubscribeRequest.new(:product_rate_plans => [@rate_plan1, @rate_plan2])
+        end
+
+        it "should add errors when there are no rate plans" do
+          @request.product_rate_plans = nil
+          @request.must_have_usable(:product_rate_plans)
+          @request.errors[:product_rate_plans].should include("must be provided")
+        end
+
+        it "should add errors when there are problems with the first rate plan" do
+          @rate_plan1.should_receive(:valid?).and_return(false)
+          @rate_plan2.should_receive(:valid?).and_return(true)
+          @request.must_have_usable(:product_rate_plans)
+          @request.errors[:product_rate_plans].should include("is invalid")
+        end
+
+        it "should add errors when there are problems with the second rate plan" do
+          @rate_plan1.should_receive(:valid?).and_return(true)
+          @rate_plan2.should_receive(:valid?).and_return(false)
+          @request.must_have_usable(:product_rate_plans)
+          @request.errors[:product_rate_plans].should include("is invalid")
+        end
+
+        it "should not add errors when there are no problems with the rate plans" do
+          @rate_plan1.should_receive(:valid?).and_return(true)
+          @rate_plan2.should_receive(:valid?).and_return(true)
+          @request.must_have_usable(:product_rate_plans)
+          @request.errors[:product_rate_plans].should be_blank
+        end
+      end
+    end
+  end  
 
   describe "generating a request" do
     before do
