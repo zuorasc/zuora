@@ -5,7 +5,7 @@ module Zuora::Objects
     attr_accessor :bill_to_contact
     attr_accessor :payment_method
     attr_accessor :sold_to_contact
-    attr_accessor :product_rate_plan
+    attr_accessor :product_rate_plans
 
     store_accessors :subscribe_options
 
@@ -13,7 +13,7 @@ module Zuora::Objects
       request.must_have_usable(:account)
       request.must_have_usable(:payment_method)
       request.must_have_usable(:bill_to_contact)
-      request.must_have_usable(:product_rate_plan)
+      request.must_have_usable(:product_rate_plans)
       request.must_have_new(:subscription)
     end
 
@@ -28,9 +28,12 @@ module Zuora::Objects
     # used to validate nested objects
     def must_have_usable(ref)
       obj = self.send(ref)
-      return errors[ref] << "must be provided" if obj.nil?
-      if obj.new_record? || obj.changed?
-        errors[ref] << "is invalid" unless obj.valid?
+      return errors[ref] << "must be provided" if obj.blank?
+      obj = obj.is_a?(Array) ? obj : [obj]
+      obj.each do |object|
+        if object.new_record? || object.changed?
+          errors[ref] << "is invalid" unless object.valid?
+        end
       end
     end
 
@@ -63,10 +66,11 @@ module Zuora::Objects
             sd.__send__(zns, :Subscription) do |sub|
               generate_subscription(sub)
             end
-
-            sd.__send__(zns, :RatePlanData) do |rpd|
-              rpd.__send__(zns, :RatePlan) do |rp|
-                rp.__send__(ons, :ProductRatePlanId, product_rate_plan.id)
+            product_rate_plans.each do |product_rate_plan|
+              sd.__send__(zns, :RatePlanData) do |rpd|
+                rpd.__send__(zns, :RatePlan) do |rp|
+                  rp.__send__(ons, :ProductRatePlanId, product_rate_plan.id)
+                end
               end
             end
           end
