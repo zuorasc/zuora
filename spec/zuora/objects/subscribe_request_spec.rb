@@ -9,6 +9,7 @@ describe Zuora::Objects::SubscribeRequest do
       end
     end
   end
+  
   describe "#product_rate_plan=" do
     it "should assign product_rate_plans as an array containing the object" do
       MockResponse.responds_with(:payment_method_credit_card_find_success) do
@@ -161,6 +162,20 @@ describe Zuora::Objects::SubscribeRequest do
         with_value('ACH')
       xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PaymentMethod/#{ons}:AchAccountName").
         with_value('Testing')
+    end
+
+    it "does not require a payment method if enable_preview_mode is set to true" do
+      subject.preview_options = {:enable_preview_mode => true, :number_of_periods => 1}
+
+      MockResponse.responds_with(:subscribe_request_success) do
+        subject.should be_valid
+        subject.create.should == true
+      end
+
+      xml = Zuora::Api.instance.last_request
+      xml.should_not have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PaymentMethod/#{ons}:Type")
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PreviewOptions/#{ons}:EnablePreviewMode").
+        with_value(true)
     end
 
     it "handles applying subscribe failures messages" do
