@@ -33,7 +33,7 @@ module Zuora::Objects
     # used to validate nested objects
     def must_have_usable(ref)
       obj = self.send(ref)
-      return errors[ref] << "must be provided" if obj.blank?
+      return errors[ref] << "must be provided" if obj.nil?
       obj = obj.is_a?(Array) ? obj : [obj]
       obj.each do |object|
         if object.new_record? || object.changed?
