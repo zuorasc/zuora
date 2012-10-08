@@ -12,9 +12,9 @@ module Zuora::Objects
 
     validate do |request|
       request.must_have_usable(:account)
-      request.must_have_usable(:payment_method) if preview_options["enable_preview_mode"] != true
-      request.must_have_usable(:bill_to_contact)
-      request.must_have_usable(:product_rate_plans)
+      #request.must_have_usable(:payment_method) if :preview_options["enable_preview_mode"] != true
+      #request.must_have_usable(:bill_to_contact)
+      #request.must_have_usable(:product_rate_plans)
       request.must_have_new(:subscription)
     end
 
