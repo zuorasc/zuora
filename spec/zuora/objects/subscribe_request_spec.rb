@@ -164,20 +164,6 @@ describe Zuora::Objects::SubscribeRequest do
         with_value('Testing')
     end
 
-    it "does not require a payment method if enable_preview_mode is set to true" do
-      subject.preview_options = {:enable_preview_mode => true, :number_of_periods => 1}
-
-      MockResponse.responds_with(:subscribe_request_success) do
-        subject.should be_valid
-        subject.create.should == true
-      end
-
-      xml = Zuora::Api.instance.last_request
-      xml.should_not have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PaymentMethod/#{ons}:Type")
-      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PreviewOptions/#{ons}:EnablePreviewMode").
-        with_value(true)
-    end
-
     it "handles applying subscribe failures messages" do
       MockResponse.responds_with(:subscribe_request_failure) do
         subject.should be_valid
@@ -194,7 +180,7 @@ describe Zuora::Objects::SubscribeRequest do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscribeOptions/#{ons}:GenerateInvoice").
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscribeOptions/#{zns}:GenerateInvoice").
         with_value(true)
     end
 
@@ -206,7 +192,7 @@ describe Zuora::Objects::SubscribeRequest do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PreviewOptions/#{ons}:EnablePreviewMode").
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PreviewOptions/#{zns}:EnablePreviewMode").
         with_value(true)
     end
 
