@@ -159,13 +159,13 @@ module Zuora::Objects
 
     def generate_subscribe_options(builder)
       subscribe_options.each do |k,v|
-        builder.__send__(ons, k.to_s.camelize.to_sym, v)
+        builder.__send__(zns, k.to_s.camelize.to_sym, v)
       end
     end
     
     def generate_preview_options(builder)
       preview_options.each do |k,v|
-        builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v)
+        builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
       end
     end
 
