@@ -7,15 +7,18 @@ module Zuora::Objects
     attr_accessor :sold_to_contact
     attr_accessor :product_rate_plans
 
+    attr_accessor :validation_errors
+
     store_accessors :subscribe_options
     store_accessors :preview_options
 
+    :validation_errors = Array.new
     validate do |request|
-      request.must_have_usable(:account)
+      :validation_errors << request.must_have_usable(:account)
       #request.must_have_usable(:payment_method) if :preview_options["enable_preview_mode"] != true
       #request.must_have_usable(:bill_to_contact)
       #request.must_have_usable(:product_rate_plans)
-      request.must_have_new(:subscription)
+      :validation_errors << request.must_have_new(:subscription)
     end
 
     # used to validate nested objects
@@ -40,7 +43,7 @@ module Zuora::Objects
 
     # Generate a subscription request
     def create
-      return false unless valid?
+      #return false unless valid?
       result = Zuora::Api.instance.request(:subscribe) do |xml|
         xml.__send__(zns, :subscribes) do |s|
           s.__send__(zns, :Account) do |a|
