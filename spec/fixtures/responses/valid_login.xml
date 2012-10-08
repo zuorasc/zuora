@@ -1,1 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Body><ns1:loginResponse xmlns:ns1="http://api.zuora.com/"><ns1:result><ns1:Session>session_key</ns1:Session><ns1:ServerUrl>https://www.zuora.com/apps/services/a/36.0</ns1:ServerUrl></ns1:result></ns1:loginResponse></soapenv:Body></soapenv:Envelope>

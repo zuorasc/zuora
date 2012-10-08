@@ -1,1 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope"><soapenv:Body><ns1:updateResponse xmlns:ns1="http://api.zuora.com/"><ns1:result><ns1:Id>4028e488348752ce0134876a25867cb2</ns1:Id><ns1:Success>true</ns1:Success></ns1:result></ns1:updateResponse></soapenv:Body></soapenv:Envelope>
