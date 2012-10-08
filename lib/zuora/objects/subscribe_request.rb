@@ -12,8 +12,9 @@ module Zuora::Objects
     store_accessors :subscribe_options
     store_accessors :preview_options
 
-    :validation_errors = Array.new
+    
     validate do |request|
+      :validation_errors = Array.new
       :validation_errors << request.must_have_usable(:account)
       #request.must_have_usable(:payment_method) if :preview_options["enable_preview_mode"] != true
       #request.must_have_usable(:bill_to_contact)
