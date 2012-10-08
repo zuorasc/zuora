@@ -7,7 +7,7 @@ module Zuora::Objects
     belongs_to :bill_to, :class_name => 'Contact'
     belongs_to :sold_to, :class_name => 'Contact'
 
-    validates_presence_of :account_number, :name, :status, :payment_term, :batch, :currency
+    validates_presence_of :name, :status, :payment_term, :batch, :currency
     validates_length_of :name, :maximum => 50
     validates_length_of :purchase_order_number, :maximum => 100, :allow_nil => true
     validates_inclusion_of :payment_term, :in => ['Due Upon Receipt','Net 30','Net 45','Net 90']
