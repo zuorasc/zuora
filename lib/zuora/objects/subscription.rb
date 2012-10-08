@@ -6,24 +6,24 @@ module Zuora::Objects
     belongs_to :creator_invoice_owner, :class_name => 'Account'
     #has_many :rate_plans
 
-    =begin
-    validates_presence_of :contract_effective_date, :term_start_date
+    
+    #validates_presence_of :contract_effective_date, :term_start_date
 
-    validates_inclusion_of    :auto_renew, :in => [true, false], allow_nil: true
-    validates_datetime_of     :cancelled_date, :allow_nil => true
-    validates_datetime_of     :contract_acceptance_date, :allow_nil => true
-    validates_datetime_of     :contract_effective_date
-    validates_numericality_of :initial_term, :only_integer => true, :minimum => 1, allow_nil: true
-    validates_inclusion_of    :is_invoice_separate, :in => [true, false], :allow_nil => true
-    validates_length_of       :name, :maximum => 100, allow_nil: true
-    validates_length_of       :notes, :maximum => 500, :allow_nil => true
-    validates_datetime_of     :original_created_date, :allow_nil => true
-    validates_numericality_of :renewal_term, :only_integer => true
-    validates_datetime_of     :service_activation_date, :allow_nil => true
-    validates_datetime_of     :term_end_date, :allow_nil => true
-    validates_datetime_of     :term_start_date
-    validates_inclusion_of    :term_type, :in => ['TERMED', 'EVERGREEN'], :allow_nil => true
-    =end
+    #validates_inclusion_of    :auto_renew, :in => [true, false], allow_nil: true
+    #validates_datetime_of     :cancelled_date, :allow_nil => true
+    #validates_datetime_of     :contract_acceptance_date, :allow_nil => true
+    #validates_datetime_of     :contract_effective_date
+    #validates_numericality_of :initial_term, :only_integer => true, :minimum => 1, allow_nil: true
+    #validates_inclusion_of    :is_invoice_separate, :in => [true, false], :allow_nil => true
+    #validates_length_of       :name, :maximum => 100, allow_nil: true
+    #validates_length_of       :notes, :maximum => 500, :allow_nil => true
+    #validates_datetime_of     :original_created_date, :allow_nil => true
+    #validates_numericality_of :renewal_term, :only_integer => true
+    #validates_datetime_of     :service_activation_date, :allow_nil => true
+    #validates_datetime_of     :term_end_date, :allow_nil => true
+    #validates_datetime_of     :term_start_date
+    #validates_inclusion_of    :term_type, :in => ['TERMED', 'EVERGREEN'], :allow_nil => true
+   
 
 
     define_attributes do
