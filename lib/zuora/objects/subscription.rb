@@ -4,7 +4,7 @@ module Zuora::Objects
     belongs_to :ancestor_account, :class_name => 'Account'
     belongs_to :creator_account, :class_name => 'Account'
     belongs_to :creator_invoice_owner, :class_name => 'Account'
-    has_many :rate_plans
+    #has_many :rate_plans
 
     validates_presence_of :contract_effective_date, :term_start_date
 
@@ -12,8 +12,8 @@ module Zuora::Objects
     validates_datetime_of     :cancelled_date, :allow_nil => true
     validates_datetime_of     :contract_acceptance_date, :allow_nil => true
     validates_datetime_of     :contract_effective_date
-    validates_numericality_of :initial_term, :only_integer => true, :minimum => 1
-    #validates_inclusion_of    :is_invoice_separate, :in => [true, false], :allow_nil => true
+    validates_numericality_of :initial_term, :only_integer => true, :minimum => 1, allow_nil: true
+    validates_inclusion_of    :is_invoice_separate, :in => [true, false], :allow_nil => true
     validates_length_of       :name, :maximum => 100, allow_nil: true
     validates_length_of       :notes, :maximum => 500, :allow_nil => true
     validates_datetime_of     :original_created_date, :allow_nil => true
