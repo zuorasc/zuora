@@ -6,8 +6,7 @@ module Zuora::Objects
     belongs_to :creator_invoice_owner, :class_name => 'Account'
     has_many :rate_plans
 
-    validates_presence_of :contract_effective_date, :initial_term,
-                          :renewal_term, :term_start_date
+    validates_presence_of :contract_effective_date, :term_start_date
 
     validates_inclusion_of    :auto_renew, :in => [true, false]
     validates_datetime_of     :cancelled_date, :allow_nil => true
