@@ -40,6 +40,7 @@ module Zuora::Objects
           errors[ref] << "is invalid" unless object.valid?
         end
       end
+      return errors
     end
 
     # Generate a subscription request
