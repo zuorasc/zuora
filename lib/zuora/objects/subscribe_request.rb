@@ -48,11 +48,10 @@ module Zuora::Objects
       result = Zuora::Api.instance.request(:subscribe) do |xml|
         xml.__send__(zns, :subscribes) do |s|
           s.__send__(zns, :Account) do |a|
-            generate_object(a, account)
+            generate_account(a)
           end
-
-          s.__send__(zns, :PreviewOptions) do |po|
-            generate_preview_options(po)
+          s.__send__(zns, :PreviewOptions) do |so|
+            generate_preview_options(so)
           end unless preview_options.blank?
 
           s.__send__(zns, :SubscribeOptions) do |so|
@@ -60,15 +59,15 @@ module Zuora::Objects
           end unless subscribe_options.blank?
 
           s.__send__(zns, :PaymentMethod) do |pm|
-            generate_object(pm, payment_method)
+            generate_payment_method(pm)
           end
 
           s.__send__(zns, :BillToContact) do |btc|
-            generate_object(btc, bill_to_contact)
+            generate_bill_to_contact(btc)
           end
 
           s.__send__(zns, :SoldToContact) do |btc|
-            generate_object(btc, sold_to_contact)
+            generate_sold_to_contact(btc)
           end unless sold_to_contact.nil?
 
           s.__send__(zns, :SubscriptionData) do |sd|
@@ -111,25 +110,55 @@ module Zuora::Objects
       end
     end
 
-    def generate_object(builder, object)
-      if object.new_record?
-        object.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
+    def generate_bill_to_contact(builder)
+      if bill_to_contact.new_record?
+        bill_to_contact.to_hash.each do |k,v|
+          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
         end
       else
-        builder.__send__(ons, :Id, object.id)
+        builder.__send__(ons, :Id, bill_to_contact.id)
+      end
+    end
+
+    def generate_sold_to_contact(builder)
+      if sold_to_contact.new_record?
+        sold_to_contact.to_hash.each do |k,v|
+          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+        end
+      else
+        builder.__send__(ons, :Id, sold_to_contact.id)
+      end
+    end
+
+    def generate_account(builder)
+      if account.new_record?
+        account.to_hash.each do |k,v|
+          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+        end
+      else
+        builder.__send__(ons, :Id, account.id)
+      end
+    end
+
+    def generate_payment_method(builder)
+      if payment_method.new_record?
+        payment_method.to_hash.each do |k,v|
+          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+        end
+      else
+        builder.__send__(ons, :Id, payment_method.id)
       end
     end
 
     def generate_subscription(builder)
       subscription.to_hash.each do |k,v|
-        builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
+        builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
       end
     end
 
     def generate_subscribe_options(builder)
       subscribe_options.each do |k,v|
-        builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v)
+        builder.__send__(ons, k.to_s.camelize.to_sym, v)
       end
     end
     
