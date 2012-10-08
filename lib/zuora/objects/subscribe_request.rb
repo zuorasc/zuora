@@ -51,13 +51,6 @@ module Zuora::Objects
           s.__send__(zns, :Account) do |a|
             generate_account(a)
           end
-          s.__send__(zns, :PreviewOptions) do |so|
-            generate_preview_options(so)
-          end unless preview_options.blank?
-
-          s.__send__(zns, :SubscribeOptions) do |so|
-            generate_subscribe_options(so)
-          end unless subscribe_options.blank?
 
           s.__send__(zns, :PaymentMethod) do |pm|
             generate_payment_method(pm)
@@ -71,6 +64,14 @@ module Zuora::Objects
             generate_sold_to_contact(btc)
           end unless sold_to_contact.nil?
 
+          s.__send__(zns, :PreviewOptions) do |so|
+            generate_preview_options(so)
+          end unless preview_options.blank?
+
+          s.__send__(zns, :SubscribeOptions) do |so|
+            generate_subscribe_options(so)
+          end unless subscribe_options.blank?
+          
           s.__send__(zns, :SubscriptionData) do |sd|
             sd.__send__(zns, :Subscription) do |sub|
               generate_subscription(sub)
