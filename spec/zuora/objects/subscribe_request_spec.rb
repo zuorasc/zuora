@@ -208,17 +208,14 @@ describe Zuora::Objects::SubscribeRequest do
         rpc = Zuora::Objects::RatePlanCharge.new
         rpc.quantity = 12
         rpc.product_rate_plan_charge_id = '123'
-        charges = Array.new
-        charges << rpc
-        plans_and_charges = Array.new
-        hash = Hash.new
+
         rp_id = subject.product_rate_plans[0]
         rp = Zuora::Objects::ProductRatePlan.new
         rp.id = rp_id.id
-        hash[:rate_plan] = rp
-        hash[:charges] = charges
-        plans_and_charges << hash
-        subject.plans_and_charges = plans_and_charges
+        pandc = Array.new
+        pandc << {rate_plan: rp, charges: [rpc]}
+
+        subject.plans_and_charges = pandc
         subject.should be_valid
         sub_resp = subject.create
         sub_resp[:success].should == true
@@ -233,18 +230,12 @@ describe Zuora::Objects::SubscribeRequest do
         rpc = Zuora::Objects::RatePlanCharge.new
         rpc.quantity = 12
         rpc.product_rate_plan_charge_id = '123'
-        charges = Array.new
-        charges << rpc
-        charges << rpc
-        pandc = Array.new
-        hash = Hash.new
         rp_id = subject.product_rate_plans[0]
         rp = Zuora::Objects::ProductRatePlan.new
         rp.id = rp_id.id
-        hash[:rate_plan] = rp
-        hash[:charges] = charges
-        pandc << hash
-        pandc << hash
+        pandc = Array.new
+        pandc << {rate_plan: rp, charges: [rpc]}
+        pandc << {rate_plan: rp, charges: [rpc]}
         subject.plans_and_charges = pandc
         subject.should be_valid
         sub_resp = subject.create
