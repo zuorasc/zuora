@@ -210,7 +210,15 @@ describe Zuora::Objects::SubscribeRequest do
         rpc.product_rate_plan_charge_id = '123'
         charges = Array.new
         charges << rpc
-        subject.rate_plan_charges = charges
+        plans_and_charges = Array.new
+        hash = Hash.new
+        rp_id = subject.product_rate_plans[0]
+        rp = Zuora::Objects::ProductRatePlan.new
+        rp.id = rp_id.id
+        hash[:rate_plan] = rp
+        hash[:charges] = charges
+        plans_and_charges << hash
+        subject.plans_and_charges = plans_and_charges
         subject.should be_valid
         sub_resp = subject.create
         sub_resp[:success].should == true
@@ -218,6 +226,32 @@ describe Zuora::Objects::SubscribeRequest do
       xml = Zuora::Api.instance.last_request
       xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscriptionData/#{zns}:RatePlanData/#{zns}:RatePlanChargeData/#{zns}:RatePlanCharge/#{ons}:Quantity").
         with_value("12")
+    end
+
+    it "supports multiple rate plans with multiple charges" do
+      MockResponse.responds_with(:subscribe_request_success) do
+        rpc = Zuora::Objects::RatePlanCharge.new
+        rpc.quantity = 12
+        rpc.product_rate_plan_charge_id = '123'
+        charges = Array.new
+        charges << rpc
+        charges << rpc
+        pandc = Array.new
+        hash = Hash.new
+        rp_id = subject.product_rate_plans[0]
+        rp = Zuora::Objects::ProductRatePlan.new
+        rp.id = rp_id.id
+        hash[:rate_plan] = rp
+        hash[:charges] = charges
+        pandc << hash
+        pandc << hash
+        subject.plans_and_charges = pandc
+        subject.should be_valid
+        sub_resp = subject.create
+        sub_resp[:success].should == true
+      end
+      xml = Zuora::Api.instance.last_request
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscriptionData/#{zns}:RatePlanData")
     end
 
     it "applies valid response data to the proper nested objects and resets dirty" do
