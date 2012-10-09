@@ -203,6 +203,23 @@ describe Zuora::Objects::SubscribeRequest do
         with_value(true)
     end
 
+    it "supports specifiying the charges quantity" do
+      MockResponse.responds_with(:subscribe_request_success) do
+        rpc = Zuora::Objects::RatePlanCharge.new
+        rpc.quantity = 12
+        rpc.product_rate_plan_charge_id = '123'
+        charges = Array.new
+        charges << rpc
+        subject.rate_plan_charges = charges
+        subject.should be_valid
+        sub_resp = subject.create
+        sub_resp[:success].should == true
+      end
+      xml = Zuora::Api.instance.last_request
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscriptionData/#{zns}:RatePlanData/#{zns}:RatePlanChargeData/#{zns}:RatePlanCharge/#{ons}:Quantity").
+        with_value("12")
+    end
+
     it "applies valid response data to the proper nested objects and resets dirty" do
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid

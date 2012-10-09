@@ -6,6 +6,7 @@ module Zuora::Objects
     attr_accessor :payment_method
     attr_accessor :sold_to_contact
     attr_accessor :product_rate_plans
+    attr_accessor :rate_plan_charges
 
     attr_accessor :validation_errors
 
@@ -82,6 +83,15 @@ module Zuora::Objects
                 rpd.__send__(zns, :RatePlan) do |rp|
                   rp.__send__(ons, :ProductRatePlanId, product_rate_plan.id)
                 end
+
+                rate_plan_charges.each do |product_rate_plan_charge|
+                  rpd.__send__(zns, :RatePlanChargeData) do |rpcd|
+                    rpcd.__send__(zns, :RatePlanCharge) do |rpc|
+                      rpc.__send__(ons, :ProductRatePlanChargeId, product_rate_plan_charge.product_rate_plan_charge_id)
+                      rpc.__send__(ons, :Quantity, product_rate_plan_charge.quantity)
+                    end
+                  end
+                end unless rate_plan_charges.nil?                              
               end
             end
           end
