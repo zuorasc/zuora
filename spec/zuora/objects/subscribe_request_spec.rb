@@ -103,7 +103,8 @@ describe Zuora::Objects::SubscribeRequest do
     it "provides properly formatted xml when using existing objects" do
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
       end
 
       xml = Zuora::Api.instance.last_request
@@ -124,7 +125,8 @@ describe Zuora::Objects::SubscribeRequest do
 
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
       end
 
       xml = Zuora::Api.instance.last_request
@@ -139,7 +141,8 @@ describe Zuora::Objects::SubscribeRequest do
 
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
       end
 
       xml = Zuora::Api.instance.last_request
@@ -153,7 +156,8 @@ describe Zuora::Objects::SubscribeRequest do
 
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
       end
 
       xml = Zuora::Api.instance.last_request
@@ -176,7 +180,8 @@ describe Zuora::Objects::SubscribeRequest do
       MockResponse.responds_with(:subscribe_request_success) do
         subject.subscribe_options = {:generate_invoice => true, :process_payments => true}
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
       end
 
       xml = Zuora::Api.instance.last_request
@@ -188,7 +193,8 @@ describe Zuora::Objects::SubscribeRequest do
       MockResponse.responds_with(:subscribe_request_success) do
         subject.preview_options = {:enable_preview_mode => true, :number_of_periods => 1}
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
       end
 
       xml = Zuora::Api.instance.last_request
@@ -196,11 +202,11 @@ describe Zuora::Objects::SubscribeRequest do
         with_value(true)
     end
 
-
     it "applies valid response data to the proper nested objects and resets dirty" do
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
         subject.subscription.should_not be_changed
         subject.subscription.should_not be_new_record
       end

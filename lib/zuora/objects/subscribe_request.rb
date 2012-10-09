@@ -105,7 +105,7 @@ module Zuora::Objects
         subscription.clear_changed_attributes!
         @previously_changed = changes
         @changed_attributes.clear
-        return true
+        return result
       else
         self.errors.add(:base, result[:errors][:message])
         return false
