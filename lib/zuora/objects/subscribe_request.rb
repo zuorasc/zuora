@@ -108,7 +108,7 @@ module Zuora::Objects
         return result
       else
         self.errors.add(:base, result[:errors][:message])
-        return false
+        return result
       end
     end
 

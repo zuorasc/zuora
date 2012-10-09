@@ -171,7 +171,8 @@ describe Zuora::Objects::SubscribeRequest do
     it "handles applying subscribe failures messages" do
       MockResponse.responds_with(:subscribe_request_failure) do
         subject.should be_valid
-        subject.create.should == false
+        sub_resp = subject.create
+        sub_resp[:success].should == false
         subject.errors[:base].should include('Initial Term should be greater than zero')
       end
     end
