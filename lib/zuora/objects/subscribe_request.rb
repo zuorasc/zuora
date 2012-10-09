@@ -54,7 +54,7 @@ module Zuora::Objects
 
           s.__send__(zns, :PaymentMethod) do |pm|
             generate_payment_method(pm)
-          end
+          end unless payment_method.nil?
 
           s.__send__(zns, :BillToContact) do |btc|
             generate_bill_to_contact(btc)
@@ -71,7 +71,7 @@ module Zuora::Objects
           s.__send__(zns, :SubscribeOptions) do |so|
             generate_subscribe_options(so)
           end unless subscribe_options.blank?
-          
+
           s.__send__(zns, :SubscriptionData) do |sd|
             sd.__send__(zns, :Subscription) do |sub|
               generate_subscription(sub)
