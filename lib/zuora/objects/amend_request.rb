@@ -29,13 +29,15 @@ module Zuora::Objects
             generate_amendment a
             generate_rate_plan_data a
           end
-          r.__send__(zns, :PreviewOptions) do |so|
-            generate_preview_options(so)
-          end unless preview_options.blank?
 
           r.__send__(zns, :AmendOptions) do |so|
             generate_amend_options(so)
           end unless amend_options.blank?
+          
+          r.__send__(zns, :PreviewOptions) do |so|
+            generate_preview_options(so)
+          end unless preview_options.blank?
+
         end
       end
       apply_response(result.to_hash, :amend_response)
