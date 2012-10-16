@@ -179,7 +179,7 @@ describe Zuora::Objects::SubscribeRequest do
 
     it "supports subscription options" do
       MockResponse.responds_with(:subscribe_request_success) do
-        subject.subscribe_options = {:generate_invoice => true, :process_payments => true}
+        subject.subscribe_options = { generate_invoice: true, process_payments: true }
         subject.should be_valid
         sub_resp = subject.create
         sub_resp[:success].should == true

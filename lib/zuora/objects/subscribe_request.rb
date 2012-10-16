@@ -27,19 +27,19 @@ module Zuora::Objects
     # used to validate nested objects
     def must_have_new(ref)
       obj = self.send(ref)
-      return errors[ref] << "must be provided" if obj.nil?
-      return errors[ref] << "must be new" unless obj.new_record?
+      return errors[ref] << "#{ref} must be provided" if obj.nil?
+      return errors[ref] << "#{ref} must be new" unless obj.new_record?
       must_have_usable(ref)
     end
 
     # used to validate nested objects
     def must_have_usable(ref)
       obj = self.send(ref)
-      return errors[ref] << "must be provided" if obj.nil?
+      return errors[ref] << "#{ref} must be provided" if obj.nil?
       obj = obj.is_a?(Array) ? obj : [obj]
       obj.each do |object|
         if object.new_record? || object.changed?
-          errors[ref] << "is invalid" unless object.valid?
+          errors[ref] << "#{ref} is invalid" unless object.valid?
         end
       end
       return errors
@@ -47,7 +47,7 @@ module Zuora::Objects
 
     # Generate a subscription request
     def create
-      return false unless valid?
+      return validation_errors unless valid?
       result = Zuora::Api.instance.request(:subscribe) do |xml|
         xml.__send__(zns, :subscribes) do |s|
           s.__send__(zns, :Account) do |a|
@@ -136,7 +136,7 @@ module Zuora::Objects
     def generate_bill_to_contact(builder)
       if bill_to_contact.new_record?
         bill_to_contact.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
         end
       else
         builder.__send__(ons, :Id, bill_to_contact.id)
@@ -146,7 +146,7 @@ module Zuora::Objects
     def generate_sold_to_contact(builder)
       if sold_to_contact.new_record?
         sold_to_contact.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
         end
       else
         builder.__send__(ons, :Id, sold_to_contact.id)
@@ -156,7 +156,7 @@ module Zuora::Objects
     def generate_account(builder)
       if account.new_record?
         account.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
         end
       else
         builder.__send__(ons, :Id, account.id)
@@ -166,7 +166,7 @@ module Zuora::Objects
     def generate_payment_method(builder)
       if payment_method.new_record?
         payment_method.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
         end
       else
         builder.__send__(ons, :Id, payment_method.id)
@@ -175,13 +175,13 @@ module Zuora::Objects
 
     def generate_subscription(builder)
       subscription.to_hash.each do |k,v|
-        builder.__send__(ons, k.to_s.camelize.to_sym, v) unless v.nil?
+        builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
       end
     end
 
     def generate_subscribe_options(builder)
       subscribe_options.each do |k,v|
-        builder.__send__(zns, k.to_s.camelize.to_sym, v)
+        builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
       end
     end
     
