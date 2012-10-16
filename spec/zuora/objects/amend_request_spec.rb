@@ -33,7 +33,7 @@ describe Zuora::Objects::AmendRequest do
         with_value('NewProduct')
       xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Name").
         with_value('Example Amendment 1')
-      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:RatePlanData/#{ons}:RatePlan/#{ons}:ProductRatePlanId").
+      xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:RatePlanData/#{zns}:RatePlan/#{zns}:ProductRatePlanId").
         with_value('4028e48834aa10a30134c50f40901ea7')
     end
 

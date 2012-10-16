@@ -75,8 +75,8 @@ module Zuora::Objects
         charges = pandc[:charges]
 
         builder.__send__(ons, :RatePlanData) do |rpd|
-          rpd.__send__(ons, :RatePlan) do |rp|
-            rp.__send__(ons, :ProductRatePlanId, rate_plan.id)
+          rpd.__send__(zns, :RatePlan) do |rp|
+            rp.__send__(zns, :ProductRatePlanId, rate_plan.id)
           end
           charges.each do |charge|
             rpd.__send__(zns, :RatePlanChargeData) do |rpcd|
