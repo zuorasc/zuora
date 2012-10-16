@@ -76,10 +76,10 @@ module Zuora::Objects
 
         builder.__send__(ons, :RatePlanData) do |rpd|
           rpd.__send__(zns, :RatePlan) do |rp|
-            rp.__send__(zns, :ProductRatePlanId, rate_plan.id)
+            rp.__send__(ons, :ProductRatePlanId, rate_plan.id)
           end
           charges.each do |charge|
-            rpd.__send__(zns, :RatePlanChargeData) do |rpcd|
+            rpd.__send__(ons, :RatePlanChargeData) do |rpcd|
               rpcd.__send__(zns, :RatePlanCharge) do |rpc|
                 rpc.__send__(ons, :ProductRatePlanChargeId, charge.product_rate_plan_charge_id)
                 rpc.__send__(ons, :Quantity, charge.quantity)
