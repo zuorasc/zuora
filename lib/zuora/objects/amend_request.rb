@@ -63,7 +63,7 @@ module Zuora::Objects
     def generate_amendment(builder)        
       amendment.to_hash.each do |k,v|
         if k.to_s != 'rate_plan_data'
-          builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
+          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
         end 
       end      
     end
