@@ -32,7 +32,7 @@ describe Zuora::Objects::SubscribeRequest do
         it "should add errors when there are problems with account" do
           @account.should_receive(:valid?).and_return(false)
           @request.must_have_usable(:account)
-          @request.errors[:account].should include("is invalid")
+          @request.errors[:account].should include("account is invalid")
         end
 
         it "should not add errors when there are no problems with account" do
@@ -52,21 +52,21 @@ describe Zuora::Objects::SubscribeRequest do
         it "should add errors when there are no rate plans" do
           @request.product_rate_plans = nil
           @request.must_have_usable(:product_rate_plans)
-          @request.errors[:product_rate_plans].should include("must be provided")
+          @request.errors[:product_rate_plans].should include("product_rate_plans must be provided")
         end
 
         it "should add errors when there are problems with the first rate plan" do
           @rate_plan1.should_receive(:valid?).and_return(false)
           @rate_plan2.should_receive(:valid?).and_return(true)
           @request.must_have_usable(:product_rate_plans)
-          @request.errors[:product_rate_plans].should include("is invalid")
+          @request.errors[:product_rate_plans].should include("product_rate_plans is invalid")
         end
 
         it "should add errors when there are problems with the second rate plan" do
           @rate_plan1.should_receive(:valid?).and_return(true)
           @rate_plan2.should_receive(:valid?).and_return(false)
           @request.must_have_usable(:product_rate_plans)
-          @request.errors[:product_rate_plans].should include("is invalid")
+          @request.errors[:product_rate_plans].should include("product_rate_plans is invalid")
         end
 
         it "should not add errors when there are no problems with the rate plans" do
