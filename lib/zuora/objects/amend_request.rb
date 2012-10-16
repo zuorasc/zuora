@@ -80,9 +80,9 @@ module Zuora::Objects
           end
           charges.each do |charge|
             rpd.__send__(zns, :RatePlanChargeData) do |rpcd|
-              rpcd.__send__(ons, :RatePlanCharge) do |rpc|
-                rpc.__send__(zns, :ProductRatePlanChargeId, charge.product_rate_plan_charge_id)
-                rpc.__send__(zns, :Quantity, charge.quantity)
+              rpcd.__send__(zns, :RatePlanCharge) do |rpc|
+                rpc.__send__(ons, :ProductRatePlanChargeId, charge.product_rate_plan_charge_id)
+                rpc.__send__(ons, :Quantity, charge.quantity)
               end
             end
           end unless charges == nil
