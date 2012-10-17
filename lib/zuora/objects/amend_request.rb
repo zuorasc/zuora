@@ -78,7 +78,9 @@ module Zuora::Objects
 
         builder.__send__(ons, :RatePlanData) do |rpd|
           rpd.__send__(zns, :RatePlan) do |rp|
-            rp.__send__(ons, :ProductRatePlanId, rate_plan.id)
+            rate_plan.to_hash.each do |k,v|
+              rp.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
+            end
           end
           charges.each do |charge|
             rpd.__send__(zns, :RatePlanChargeData) do |rpcd|

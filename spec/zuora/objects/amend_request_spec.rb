@@ -16,13 +16,18 @@ describe Zuora::Objects::AmendRequest do
       @amendment = FactoryGirl.build(:amendment)
       @amendment.subscription_id = subscription.id
       MockResponse.responds_with(:payment_method_credit_card_find_success) do
-        @product_rate_plans = [Zuora::Objects::ProductRatePlan.find('stub')]
+        product_rate_plans = [Zuora::Objects::ProductRatePlan.find('stub')]
+
+        @prps = Zuora::Objects::RatePlan.new
+        @prps.product_rate_plan_id = product_rate_plans[0].id
+        @product_rate_plans = [@prps]
       end
     end
 
     it "provides properly formatted xml when using existing objects" do
       MockResponse.responds_with(:amend_request_success) do
         subject.amendment = @amendment
+
         subject.plans_and_charges = Array.new << { rate_plan: @product_rate_plans[0], charges: nil }
         amnd_resp = subject.create
         amnd_resp[:success].should == true
