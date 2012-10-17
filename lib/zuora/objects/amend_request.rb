@@ -12,7 +12,7 @@ module Zuora::Objects
     validate do |request|
       self.validation_errors = Array.new
       self.validation_errors << request.must_be_present(:amendment)
-      self.validation_errors << request.must_be_present(:plans_and_charges)
+      self.validation_errors << request.must_be_present(:plans_and_charges) unless amendment.type == "TermsAndConditions" || amendment.type == "Renewal"
     end
 
     def must_be_present(ref)
@@ -33,7 +33,7 @@ module Zuora::Objects
           r.__send__(zns, :AmendOptions) do |so|
             generate_amend_options(so)
           end unless amend_options.blank?
-          
+
           r.__send__(zns, :PreviewOptions) do |so|
             generate_preview_options(so)
           end unless preview_options.blank?
