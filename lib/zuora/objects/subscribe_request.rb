@@ -19,7 +19,7 @@ module Zuora::Objects
       self.validation_errors = Array.new
       self.validation_errors << request.must_have_usable(:account)
       #request.must_have_usable(:payment_method) if :preview_options["enable_preview_mode"] != true
-      request.must_have_usable(:bill_to_contact)
+      #request.must_have_usable(:bill_to_contact)
       #request.must_have_usable(:product_rate_plans)
       self.validation_errors << request.must_have_new(:subscription)
     end
