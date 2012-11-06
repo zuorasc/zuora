@@ -47,7 +47,7 @@ module Zuora::Objects
 
     # Generate a subscription request
     def create
-      return validation_errors unless valid?
+      #return validation_errors unless valid?
       result = Zuora::Api.instance.request(:subscribe) do |xml|
         xml.__send__(zns, :subscribes) do |s|
           s.__send__(zns, :Account) do |a|
