@@ -60,7 +60,7 @@ module Zuora::Objects
 
           s.__send__(zns, :BillToContact) do |btc|
             generate_bill_to_contact(btc)
-          end
+          end unless bill_to_contact.nil?
 
           s.__send__(zns, :SoldToContact) do |btc|
             generate_sold_to_contact(btc)
