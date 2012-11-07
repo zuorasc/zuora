@@ -97,6 +97,12 @@ module Zuora::Objects
 
       generate(result.to_hash, :query_response)
     end
+
+    def self.query(query_string)
+      result = self.connector.query(query_string)
+      generate(result.to_hash, :query_response)
+    end
+
     # has this record not been saved?
     def new_record?
       id.nil?

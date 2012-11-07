@@ -54,5 +54,6 @@ module Zuora::Objects
         :invoice_date => Proc.new { Date.today }
       )
     end
+
   end
 end
