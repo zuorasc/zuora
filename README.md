@@ -56,9 +56,9 @@ All additional requirements for development should be referenced in the provided
   This library currently supports Zuora's SOAP API version 38.
 
 ## Contributors
-  * Josh Martin <josh.martin@wildfireapp.com>
-  * Alex Reyes <alex.reyes@wildfireapp.com>
-  * Wael Nasreddine <wael.nasreddine@wildfireapp.com>
+  * Josh Martin <joshuamartin@google.com>
+  * Alex Reyes <alexreyes@google.com>
+  * Wael Nasreddine <wnasreddine@google.com>
 
 ## Credits
   * [Wildfire Ineractive](http://www.wildfireapp.com) for facilitating the development and maintenance of the project.
