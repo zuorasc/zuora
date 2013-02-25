@@ -50,6 +50,29 @@ describe Zuora::Objects::SubscribeRequest do
       xml.should_not have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{ons}:SubscribeOptions")
     end
 
+    it "provides properly formatted xml when using existing objects or references" do
+      MockResponse.responds_with(:subscribe_request_success) do
+        # We should be able to generate the request with either the materialized ProductRatePlan or just its ID.
+        subject.product_rate_plan = nil
+        subject.product_rate_plan_id = '4028e48834aa10a30134c50f40901ea7'
+
+        subject.should be_valid
+        subject.create.should == true
+      end
+
+      xml = Zuora::Api.instance.last_request
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:Account/#{ons}:Id").
+                     with_value('4028e488348752ce0134876a25867cb2')
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PaymentMethod/#{ons}:Id").
+                     with_value('4028e48834aa10a30134c50f40901ea7')
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:BillToContact/#{ons}:Id").
+                     with_value('4028e4873491cc770134972e75746e4c')
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscriptionData/#{zns}:Subscription")
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscriptionData/#{zns}:RatePlanData/#{zns}:RatePlan/#{ons}:ProductRatePlanId").
+                     with_value('4028e48834aa10a30134c50f40901ea7')
+      xml.should_not have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{ons}:SubscribeOptions")
+    end
+
     it "provides full account info when new object" do
       subject.account = FactoryGirl.build(:account)
 
