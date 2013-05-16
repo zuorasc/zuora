@@ -8,7 +8,7 @@ module Zuora::Objects
 
     validates_length_of :accounting_code, :maximum => 100, :allow_nil => true
     validates_numericality_of :amount
-    validates_numericality_of :applied_credit_balance_amount
+    #validates_numericality_of :applied_credit_balance_amount
     validates_numericality_of :applied_invoice_amount
     validates_length_of :auth_transaction_id, :maximum => 50, :allow_nil => true
     validates_length_of :bank_identification_number, :maximum => 6, :allow_nil => true
@@ -17,21 +17,21 @@ module Zuora::Objects
     validates_length_of :created_by_id, :maximum => 32, :allow_nil => true
     validates_datetime_of :effective_date
     validates_length_of :gateway_order_id, :maximum => 70, :allow_nil => true
-    validates_inclusion_of :gateway_state, :in => %w(NotSubmitted Submitted Settled MarkedForSubmission)
+    #validates_inclusion_of :gateway_state, :in => %w(NotSubmitted Submitted Settled MarkedForSubmission)
     validates_datetime_of :marked_for_submission_on, :allow_nil => true
     validates_length_of :payment_number, :maximum => 32, :allow_nil => true
     validates_length_of :reference_id, :maximum => 30, :allow_nil => true
     validates_numericality_of :refund_amount, :allow_nil => true
     validates_length_of :second_payment_reference_id, :maximum => 60, :allow_nil => true
     validates_date_of :settled_on, :allow_nil => true
-    validates_length_of :soft_descriptor, :maximum => 35, :allow_nil => true
-    validates_length_of :soft_descriptor_phone, :maximum => 20, :allow_nil => true
+    #validates_length_of :soft_descriptor, :maximum => 35, :allow_nil => true
+    #validates_length_of :soft_descriptor_phone, :maximum => 20, :allow_nil => true
     validates_inclusion_of :status, :in => %w(Canceled Draft Error Posted Processing Processed Voided)
     validates_date_of :submitted_on, :allow_nil => true
-    validates_inclusion_of :transferred_to_accouning, :allow_nil => true, :in => %w(Processing Yes Error Ignore)
+    validates_inclusion_of :transferred_to_accounting, :allow_nil => true, :in => %w(Processing Yes Error Ignore)
     validates_inclusion_of :type, :in => %w(External Electronic)
     validates_length_of :updated_by_id, :maximum => 32
-    validates_datetime_of :updated_date
+    validates_datetime_of :updated_date, :allow_nil => true
 
     define_attributes do
       read_only :bank_identification_number, :created_by_id, :created_date, :gateway_response,
