@@ -3,7 +3,7 @@ module Zuora::Objects
     belongs_to :account
     belongs_to :invoice
 
-    validates_presence_of :account_id, :amount, :effective_date, :gateway_state,
+    validates_presence_of :account_id, :amount, :effective_date,
     :payment_method_id, :status, :type
 
     validates_length_of :accounting_code, :maximum => 100, :allow_nil => true
