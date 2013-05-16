@@ -17,7 +17,7 @@ module Zuora
       Zuora::Api.instance.request(:create) do |xml|
         xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
           @model.to_hash.each do |k,v|
-            a.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
+            a.__send__(ons, k.to_s.zuora_camelize.to_sym, convert_value(v)) unless v.nil?
           end
           generate_complex_objects(a, :create)
         end
@@ -32,7 +32,7 @@ module Zuora
           a.__send__(ons, :Id, obj_id)
           change_syms = @model.changed.map(&:to_sym)
           obj_attrs.reject{|k,v| @model.read_only_attributes.include?(k) }.each do |k,v|
-            a.__send__(ons, k.to_s.zuora_camelize.to_sym, v) if change_syms.include?(k)
+            a.__send__(ons, k.to_s.zuora_camelize.to_sym, convert_value(v)) if change_syms.include?(k)
           end
           generate_complex_objects(a, :update)
         end
@@ -43,7 +43,7 @@ module Zuora
       Zuora::Api.instance.request(:generate) do |xml|
         xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
           @model.to_hash.each do |k, v|
-            a.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
+            a.__send__(ons, k.to_s.zuora_camelize.to_sym, convert_value(v)) unless v.nil?
           end
         end
       end
@@ -88,6 +88,15 @@ module Zuora
     end
 
     protected
+
+    # Zuora doesn't like the default string format of ruby dates/times
+    def convert_value(value)
+      if [Date, Time, DateTime].any? { |klass| value.is_a?(klass) }
+        value.strftime('%FT%T')
+      else
+        value
+      end
+    end
 
     # generate complex objects for inclusion when creating and updating records
     def generate_complex_objects(builder, action)
