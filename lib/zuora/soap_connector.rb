@@ -38,6 +38,16 @@ module Zuora
         end
       end
     end
+ 
+    def generate
+      Zuora::Api.instance.request(:generate) do |xml|
+        xml.__send__(zns, :zObjects, 'xsi:type' => "#{ons}:#{remote_name}") do |a|
+          @model.to_hash.each do |k, v|
+            a.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
+          end
+        end
+      end
+    end
 
     def destroy
       Zuora::Api.instance.request(:delete) do |xml|
