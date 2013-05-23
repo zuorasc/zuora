@@ -63,7 +63,7 @@ module Zuora::Objects
     end
 
     def self.namespace(uri)
-      Zuora::Api.instance.client.soap.namespace_by_uri(uri)
+      Zuora::Api.instance.client.operation(:query).build.send(:namespace_by_uri, uri)
     end
 
     def self.zns

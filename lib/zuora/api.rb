@@ -11,13 +11,6 @@ module Zuora
   # @return [Config]
   def self.configure(opts={})
     Api.instance.config = Config.new(opts)
-    HTTPI.logger = opts[:logger]
-    HTTPI.log = opts[:logger] ? true : false
-    Savon.configure do |savon|
-      savon.logger = opts[:logger]
-      savon.log = opts[:logger] ? true : false
-    end
-
     if Api.instance.config.sandbox
       Api.instance.sandbox!
     end
@@ -36,8 +29,21 @@ module Zuora
 
     # @return [Zuora::Config]
     attr_accessor :config
+ 
+    # @return Zuora::Api options
+    attr_accessor :options
+
+    # The XML that was transmited in the last request
+    # @return [String]
+    attr_reader :last_request
 
     WSDL = File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
+    SOAP_VERSION = 2
+    SANDBOX_ENDPOINT = 'https://apisandbox.zuora.com/apps/services/a/38.0'
+
+    def wsdl
+      client.instance_variable_get(:@wsdl)
+    end
 
     # Is this an authenticated session?
     # @return [Boolean]
@@ -48,13 +54,7 @@ module Zuora
     # Change client to sandbox url
     def sandbox!
       @client = nil
-      self.class.instance.client.wsdl.endpoint = "https://apisandbox.zuora.com/apps/services/a/38.0"
-    end
-
-    # The XML that was transmited in the last request
-    # @return [String]
-    def last_request
-      client.http.body
+      self.class.instance.client.globals[:endpoint] = SANDBOX_ENDPOINT
     end
 
     # Generate an API request with the given block.  The block yields an xml
@@ -64,18 +64,17 @@ module Zuora
     # @param [String] string xml body pass to the operation
     # @yield [Builder] xml builder instance
     # @raise [Zuora::Fault]
-    def request(method, xml_body=nil, &block)
+    def request(method, options={}, &block)
       authenticate! unless authenticated?
 
-      response = client.request(method) do
-        soap.header = {'env:SessionHeader' => {'ins0:Session' => self.session.try(:key) }}
-        if block_given?
-          soap.body{|xml| yield xml }
-        else
-          soap.body = xml_body
-        end
+      if block_given?
+        xml = Builder::XmlMarkup.new
+        yield xml
+        options[:message] = xml.target!
       end
-    rescue Savon::SOAP::Fault, IOError => e
+
+      client.call(method, options)
+    rescue Savon::SOAPFault, IOError => e
       raise Zuora::Fault.new(:message => e.message)
     end
 
@@ -87,28 +86,31 @@ module Zuora
     # Upon failure a Zoura::Fault will be raised.
     # @raise [Zuora::Fault]
     def authenticate!
-      response = client.request(:login) do
-        ns = Zuora::Api.instance.client.soap.namespace_by_uri('http://api.zuora.com/')
-        soap.body = "<#{ns}:username>#{Zuora::Api.instance.config.username}</#{ns}:username><#{ns}:password>#{Zuora::Api.instance.config.password}</#{ns}:password>"
+      response = client.call(:login) do
+        message username: Zuora::Api.instance.config.username, password: Zuora::Api.instance.config.password
       end
       self.session = Zuora::Session.generate(response.to_hash)
-    rescue Savon::SOAP::Fault => e
+      client.globals.soap_header({'env:SessionHeader' => {'ins0:Session' => self.session.try(:key) }})
+    rescue Savon::SOAPFault => e
       raise Zuora::Fault.new(:message => e.message)
     end
 
     private
 
     def initialize
-      Savon.configure do |savon|
-        savon.soap_version = 2
-      end
+      @config = Config.new
     end
 
     def make_client
-      Savon::Client.new do
-        wsdl.document = WSDL
-        http.auth.ssl.verify_mode = :none
-      end
+      savon_options = {
+        wsdl: WSDL,
+        soap_version: SOAP_VERSION,
+        log: config.log || false,
+        logger: config.logger,
+        ssl_verify_mode: :none
+      }.reject! { |k, v| v.nil? }
+
+      Savon.client(savon_options)
     end
 
   end

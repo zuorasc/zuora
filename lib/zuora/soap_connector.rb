@@ -64,7 +64,7 @@ module Zuora
       # definitions, and only handles inline types.
       # This is a work in progress, and hopefully this
       # can be removed in the future via proper support.
-      tdefs = Zuora::Api.instance.client.wsdl.type_definitions
+      tdefs = Zuora::Api.instance.wsdl.type_definitions
       klass = attrs['@xsi:type'.to_sym].base_name
       if klass
         attrs.each do |a,v|
