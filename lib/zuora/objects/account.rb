@@ -10,7 +10,7 @@ module Zuora::Objects
     validates_presence_of :name, :status, :payment_term, :batch, :currency
     validates_length_of :name, :maximum => 50
     validates_length_of :purchase_order_number, :maximum => 100, :allow_nil => true
-    validates_inclusion_of :payment_term, :in => ['Due Upon Receipt','Net 30','Net 45','Net 90']
+    validates_inclusion_of :payment_term, :in => ['Due Upon Receipt','Net 30','Net 45','Net 60','Net 90']
     validates_inclusion_of :batch, :in => (1..20).map{|n| "Batch#{n}" }
     validates_inclusion_of :bcd_setting_option, :in => ['AutoSet','ManualSet'], :allow_nil => true
     validates_inclusion_of :bill_cycle_day, :in => (0..30).to_a + (0..30).map(&:to_s)
