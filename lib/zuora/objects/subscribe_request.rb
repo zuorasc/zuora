@@ -182,7 +182,15 @@ module Zuora::Objects
 
     def generate_subscribe_options(builder)
       subscribe_options.each do |k,v|
-        builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
+        if k.to_s == 'subscribe_invoice_processing_options'
+          builder.__send__(zns, :SubscribeInvoiceProcessingOptions) do |so|
+            v.each do |p, q|
+              so.__send__(zns, p.to_s.zuora_camelize.to_sym, q)
+            end
+          end
+        else
+          builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
+        end
       end
     end
     
