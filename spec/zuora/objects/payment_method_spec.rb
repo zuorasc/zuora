@@ -74,6 +74,4 @@ describe Zuora::Objects::PaymentMethod do
       end
     end
   end
-
 end
-

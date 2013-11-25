@@ -59,6 +59,5 @@ module Zuora::Objects
       result = self.connector.generate
       apply_response(result.to_hash, :generate_response)
     end
-
   end
 end

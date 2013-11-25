@@ -34,6 +34,5 @@ describe Zuora::Objects::AmendRequest do
         amnd_resp[:errors][:message].should include('Invalid value for field SubscriptionId: 2c92c0f93a569878013a6778f0446b11')
       end
     end
-
   end  
 end

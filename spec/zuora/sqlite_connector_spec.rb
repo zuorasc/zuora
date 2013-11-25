@@ -118,16 +118,14 @@ describe Zuora::SqliteConnector do
       end
     end
 
-      describe "factories" do
-        before :each do
-          @product = Factory(:product)
-        end
-
-        it "should exists" do
-          @product.should be
-        end
+    describe "factories" do
+      before :each do
+        @product = Factory(:product)
       end
+
+      it "should exists" do
+        @product.should be
+      end
+    end
   end
-
-
 end

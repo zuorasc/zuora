@@ -48,6 +48,5 @@ describe "Validations" do
         @obj.errors[:validated_at].should include('is not a valid datetime')
       end
     end
-
   end
 end

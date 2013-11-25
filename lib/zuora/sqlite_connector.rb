@@ -128,6 +128,5 @@ module Zuora
       schema = "CREATE TABLE 'main'.'#{table_name}' (#{attributes});"
       db.execute schema
     end
-
   end
 end
