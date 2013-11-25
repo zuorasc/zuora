@@ -24,8 +24,8 @@ describe Zuora::Objects::Base do
 
   describe :initializer do
     it "allows to overwrite default values" do
-      Zuora::Objects::Invoice.new.includes_usage.should be_true
-      Zuora::Objects::Invoice.new(:includes_usage => false).includes_usage.should be_false
+      Zuora::Objects::Account.new.auto_pay.should be_false
+      Zuora::Objects::Account.new(:auto_pay => true).auto_pay.should be_true
     end
 
     it "assigns attributes from passed in hash" do

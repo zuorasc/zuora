@@ -2,7 +2,7 @@ module Zuora::Objects
   class PaymentMethod < Base
     belongs_to :account
 
-    validates_presence_of :account_id
+    validates_presence_of :account_id, :unless => Proc.new { |contact| contact.new_record? }
 
     # Generic Validations
     validates_inclusion_of    :type, :in => %w(ACH Cash Check CreditCard CreditCardReferenceTransaction DebitCard Other PayPal WireTransfer)

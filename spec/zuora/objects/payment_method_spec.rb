@@ -58,35 +58,6 @@ describe Zuora::Objects::PaymentMethod do
   end
 
   describe "Credit Card" do
-    it "generates proper request xml" do
-      MockResponse.responds_with(:payment_method_credit_card_create_success) do
-
-        FactoryGirl.create(:payment_method_credit_card, :account => @account)
-
-        xml = Zuora::Api.instance.last_request
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Type").
-          with_value('CreditCard')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardAddress1").
-          with_value('123 Testing Lane')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardCity").
-          with_value('San Francisco')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardState").
-          with_value('California')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardPostalCode").
-          with_value('95611')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardHolderName").
-          with_value('Example User')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardNumber").
-          with_value('4111111111111111')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardType").
-          with_value('Visa')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardExpirationMonth").
-          with_value('9')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:CreditCardExpirationYear").
-          with_value('2018')
-      end
-    end
-
     it "masks credit card information" do
       MockResponse.responds_with(:payment_method_credit_card_find_success) do
         pm = Zuora::Objects::PaymentMethod.find('stub')
@@ -96,51 +67,10 @@ describe Zuora::Objects::PaymentMethod do
   end
 
   describe "ACH" do
-    it "generates proper request xml" do
-      MockResponse.responds_with(:payment_method_ach_create_success) do
-
-        FactoryGirl.create(:payment_method_ach, :account => @account)
-
-        xml = Zuora::Api.instance.last_request
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Type").
-          with_value('ACH')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AchAbaCode").
-          with_value('123456789')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AchAccountName").
-          with_value('My Checking Account')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AchBankName").
-          with_value('Bank of Zuora')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AchAccountNumber").
-          with_value('987654321')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AchAccountType").
-          with_value('BusinessChecking')
-      end
-    end
-
     it "masks bank information" do
       MockResponse.responds_with(:payment_method_ach_find_success) do
         pm = Zuora::Objects::PaymentMethod.find('stub')
         pm.ach_account_number.should == "*****4321"
-      end
-    end
-  end
-
-  describe "PayPal" do
-    it "generates proper request xml" do
-      MockResponse.responds_with(:payment_method_ach_create_success) do
-
-        FactoryGirl.create(:payment_method_paypal, :account => @account)
-
-        xml = Zuora::Api.instance.last_request
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Type").
-          with_value('PayPal')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:PaypalBaid").
-          with_value('ExampleBillingAgreementId')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:PaypalEmail").
-          with_value('example@example.org')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:PaypalType").
-          with_value('ExpressCheckout')
-        xml.should_not have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:PaypalPreapprovalKey")
       end
     end
   end

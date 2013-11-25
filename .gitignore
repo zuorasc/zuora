@@ -3,6 +3,12 @@ doc
 .yardoc
 .rvmrc
 .rbenv-version
+.name
+.rakeTasks
+.iml
 gemfiles/*.gemfile.lock
 zuora.log
 Gemfile.lock
+.ruby-version
+.ruby-gemset
+.idea

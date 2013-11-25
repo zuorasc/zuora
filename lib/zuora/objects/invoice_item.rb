@@ -29,7 +29,7 @@ module Zuora::Objects
     define_attributes do
       read_only :charge_description, :charge_name, :charge_number, :created_by_id, :created_date,
         :invoice_id, :product_description, :quantity, :subscription_number,
-        :updated_by_id, :updated_date
+        :updated_by_id, :updated_date, :tax_amount
     end
   end
 end

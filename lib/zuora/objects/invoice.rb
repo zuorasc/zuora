@@ -48,11 +48,17 @@ module Zuora::Objects
         :updated_date
       )
       defaults(
-        :includes_one_time => true,
-        :includes_recurring => true,
-        :includes_usage => true,
-        :invoice_date => Proc.new { Date.today }
+        #:includes_one_time => true,
+        #:includes_recurring => true,
+        #:includes_usage => true,
+        #:invoice_date => Proc.new { Date.today }
       )
     end
+
+    def generate
+      result = self.connector.generate
+      apply_response(result.to_hash, :generate_response)
+    end
+
   end
 end

@@ -4,7 +4,6 @@ module Zuora
       @data = {}
       update!(data)
     end
-
     def update!(data)
       data.each do |key, value|
         self[key] = value

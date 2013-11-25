@@ -13,21 +13,34 @@ All additional requirements for development should be referenced in the provided
 
 ## Installation
 
-    git clone git@github.com:wildfireapp/zuora.git
+    git clone https://github.com/zuorasc/zuora.git
 
 ## Getting Started
 
     $ bundle install
     $ bundle exec irb -rzuora
 
-    Zuora.configure(:username => 'USER', :password => 'PASS')
-
-    account = Zuora::Objects::Account.create(:account_number => '12345')
-    # => <Zuora::Objects::Account :account_number => 12345, :id => 'abc123'>
-    Zuora::Objects::Account.find('abc123')
-    # => <Zuora::Objects::Account :account_number => 12345, :id => 'abc123'>
-    account.destroy
-    # => true
+    Zuora.configure(:username => 'USER', :password => 'PASS', sandbox: true, logger: true)
+      
+    account = Zuora::Objects::Account.new
+     => #<Zuora::Objects::Account:0x00000002cd25b0 @changed_attributes={"auto_pay"=>nil, "currency"=>nil, 
+    "batch"=>nil, "bill_cycle_day"=>nil, "status"=>nil, "payment_term"=>nil}, @auto_pay=false, @currency="USD",
+    @batch="Batch1", @bill_cycle_day=1, @status="Draft", @payment_term="Due Upon Receipt">
+    
+    account.name = "Test"
+     => "Test"
+     
+    account.create
+     => true
+    
+    created_account = Zuora::Objects::Account.find(account.id)
+     => #<Zuora::Objects::Account:0x00000003caafc8 @changed_attributes={}, @auto_pay=false, @currency="USD", 
+    @batch="Batch1", @bill_cycle_day=1, @status="Draft", @payment_term="Due Upon Receipt", 
+    @id="2c92c0f83c1de760013c449bc26e555b", @account_number="A00000008", @allow_invoice_edit=false, 
+    @balance=#<BigDecimal:3c895f8,'0.0',9(18)>, @bcd_setting_option="ManualSet", 
+    @created_by_id="2c92c0f83b02a9dc013b0a7e26a03d00", @created_date=Wed, 16 Jan 2013 10:25:24 -0800, 
+    @invoice_delivery_prefs_email=false, @invoice_delivery_prefs_print=false, @name="Test", 
+    @updated_by_id="2c92c0f83b02a9dc013b0a7e26a03d00", @updated_date=Wed, 16 Jan 2013 10:25:24 -0800>
 
 ## Documentation
   You can generate up to date documentation with the provided a rake task.

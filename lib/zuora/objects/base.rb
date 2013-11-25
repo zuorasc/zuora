@@ -32,7 +32,15 @@ module Zuora::Objects
         end
       end
     end
+    # get all the records
+    def self.all
+      keys = (attributes - unselectable_attributes).map(&:to_s).map(&:zuora_camelize)
+      sql = "select #{keys.join(', ')} from #{remote_name}"
 
+      result = self.connector.query(sql)
+
+      generate(result.to_hash, :query_response)
+    end
     # find a record by the id
     def self.find(id)
       where(:id => id).first
@@ -55,7 +63,7 @@ module Zuora::Objects
     end
 
     def self.namespace(uri)
-      Zuora::Api.instance.client.soap.namespace_by_uri(uri)
+      Zuora::Api.instance.client.operation(:query).build.send(:namespace_by_uri, uri)
     end
 
     def self.zns
@@ -78,15 +86,20 @@ module Zuora::Objects
     # is not supported as it requires an actual db connection to
     # generate the sql queries. This may be overcome in the future.
     def self.where(where)
-      keys = (attributes - unselectable_attributes).map(&:to_s).map(&:camelcase)
+      keys = (attributes - unselectable_attributes).map(&:to_s).map(&:zuora_camelize)
       if where.is_a?(Hash)
         # FIXME: improper inject usage.
-        where = where.inject([]){|t,v| t << "#{v[0].to_s.camelcase} = '#{v[1]}'"}.sort.join(' and ')
+        where = where.inject([]){|t,v| t << "#{v[0].to_s.zuora_camelize} = '#{v[1]}'"}.sort.join(' and ')
       end
       sql = "select #{keys.join(', ')} from #{remote_name} where #{where}"
 
       result = self.connector.query(sql)
 
+      generate(result.to_hash, :query_response)
+    end
+
+    def self.query(query_string)
+      result = self.connector.query(query_string)
       generate(result.to_hash, :query_response)
     end
 
