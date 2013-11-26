@@ -1,6 +1,4 @@
-source :rubygems
-
-gem 'wasabi', :git => 'git://github.com/skiz/wasabi.git'
+source 'https://rubygems.org'
 
 gemspec
 

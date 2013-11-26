@@ -21,7 +21,7 @@ describe Zuora::SqliteConnector do
         table_name = described_class.table_name(m)
         table = @db.table_info(table_name)
         columns = table.map {|t| t["name"] }
-        camel_attrs = m.attributes.map { |a| a.to_s.camelize }
+        camel_attrs = m.attributes.map { |a| a.to_s.zuora_camelize }
         (camel_attrs - columns).should == []
       end
     end
@@ -118,15 +118,15 @@ describe Zuora::SqliteConnector do
       end
     end
 
-      describe "factories" do
-        before :each do
-          @product = Factory(:product)
-        end
-
-        it "should exists" do
-          @product.should be
-        end
+    describe "factories" do
+      before :each do
+        @product = Factory(:product)
       end
+
+      it "should exists" do
+        @product.should be
+      end
+    end
   end
 
 

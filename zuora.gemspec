@@ -18,7 +18,8 @@ Gem::Specification.new do |s|
   s.licenses = ["Apache 2.0"]
   s.extra_rdoc_files = ["README.md"]
 
-  s.add_runtime_dependency(%q<savon>, ["~> 0.9.8"])
+  s.add_runtime_dependency(%q<wasabi>, ["~> 3.2.0"])
+  s.add_runtime_dependency(%q<savon>, ["~> 2.3.0"])
   s.add_runtime_dependency(%q<activesupport>, [">= 3.0.0", "< 4.0.0"])
   s.add_runtime_dependency(%q<activemodel>, [">= 3.0.0", "< 4.0.0"])
   s.add_runtime_dependency(%q<libxml4r>, ['~> 0.2.6'])
@@ -32,4 +33,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<factory_girl>, ["~> 2.6.4"])
   s.add_development_dependency(%q<appraisal>, ["~> 0.4.1"])
   s.add_development_dependency(%q<sqlite3>, ["~> 1.3.0"])
+  s.add_development_dependency('debugger')
 end
