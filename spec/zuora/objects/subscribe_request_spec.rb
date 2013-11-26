@@ -58,8 +58,7 @@ describe Zuora::Objects::SubscribeRequest do
         subject.product_rate_plan_id = '4028e48834aa10a30134c50f40901ea7'
 
         subject.should be_valid
-        sub_resp = subject.create
-        sub_resp[:success].should == true
+        subject.create.should == true
       end
 
       xml = Zuora::Api.instance.last_request
