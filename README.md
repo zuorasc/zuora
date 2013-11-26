@@ -70,11 +70,15 @@ All additional requirements for development should be referenced in the provided
 ## Support & Maintenance
   This library currently supports Zuora's SOAP API version 38.
 
+  If you would like to test out the **EXPERIMENTAL** API version 51 support, see
+  the a51 branch and please file bugs and pull requests against it.
+
 ## Contributors
   * Josh Martin <joshuamartin@google.com>
   * Alex Reyes <alexreyes@google.com>
   * Wael Nasreddine <wnasreddine@google.com>
   * [mdemin914](http://github.com/mdemin914)
+  * [jmonline](http://github.com/jmonline)
 
 ## Credits
   * [Wildfire Ineractive](http://www.wildfireapp.com) for facilitating the development and maintenance of the project.
