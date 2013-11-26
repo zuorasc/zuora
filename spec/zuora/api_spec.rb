@@ -6,21 +6,13 @@ describe Zuora::Api do
       Zuora::Api.any_instance.stub(:authenticated?).and_return(true)
     end
 
-    it "has readable production WSDL" do
-      File.exists?(Zuora::Api::PRODUCTION_WSDL).should be
+    it "has readable WSDL" do
+      File.exists?(Zuora::Api::WSDL).should be
     end
 
-    it "has readable sandbox WSDL" do
-      File.exists?(Zuora::Api::SANDBOX_WSDL).should be
-    end
-
-    it "uses production WSDL by default" do
-      Zuora::Api.instance.client.wsdl.endpoint.to_s.should == "https://www.zuora.com/apps/services/a/38.0"
-    end
-
-    it "can be configured to use sandbox WSDL" do
+    it "can be configured to use sandbox" do
       Zuora.configure(:username => 'example', :password => 'test', :sandbox => true)
-      Zuora::Api.instance.client.wsdl.endpoint.to_s.should == "https://apisandbox.zuora.com/apps/services/a/38.0"
+      Zuora::Api.instance.client.globals[:endpoint].to_s.should == "https://apisandbox.zuora.com/apps/services/a/38.0"
     end
 
     it "can be configured multiple times" do
@@ -56,16 +48,16 @@ describe Zuora::Api do
       MockResponse.responds_with(:invalid_login, 500) do
         lambda do
           Zuora.configure(:username => 'example', :password => 'test')
-          Zuora::Api.instance.request(:example)
+          Zuora::Api.instance.authenticate!
         end.should raise_error(Zuora::Fault)
       end
     end
 
     it "raises exception when IOError is found" do
-      Zuora::Api.instance.client.should_receive(:request).and_raise(IOError.new)
+      Zuora::Api.instance.client.should_receive(:call).and_raise(IOError.new)
       Zuora.configure(:username => 'example', :password => 'test')
       lambda do
-        Zuora::Api.instance.request(:example)
+        Zuora::Api.instance.request(:query)
       end.should raise_error(Zuora::Fault)
     end
   end

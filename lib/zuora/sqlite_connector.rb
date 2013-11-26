@@ -30,7 +30,7 @@ module Zuora
       keys = []
       values = []
       hash.each do |key, value|
-        keys << key.to_s.camelize
+        keys << key.to_s.zuora_camelize
         values << value.to_s
       end
       place_holder = ['?'] * keys.length
@@ -56,7 +56,7 @@ module Zuora
       keys   = []
       values = []
       hash.each do |key, value|
-        keys << "#{key.to_s.camelize}=?"
+        keys << "#{key.to_s.zuora_camelize}=?"
         values << value.to_s
       end
       keys   = keys.join(', ')
@@ -120,7 +120,7 @@ module Zuora
       table_name = self.table_name(model)
       attributes = model.attributes - [:id]
       attributes = attributes.map do |a|
-        "'#{a.to_s.camelize}' text"
+        "'#{a.to_s.zuora_camelize}' text"
       end
       autoid = "'Id' integer PRIMARY KEY AUTOINCREMENT"
       attributes.unshift autoid
