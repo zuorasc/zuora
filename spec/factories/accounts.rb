@@ -6,7 +6,7 @@ FactoryGirl.define do
 
   factory :active_account, :parent => :account do
     after_create do |account|
-      contact = FactoryGirl.create(:contact, :account => account)
+      contact = FactoryGirl.create(:contact, :account => account, :country => "GB")
       account.bill_to = contact
       account.sold_to = contact
       account.status = "Active"
