@@ -3,6 +3,8 @@ doc
 .yardoc
 .rvmrc
 .rbenv-version
+.ruby-version
+.ruby-gemset
 gemfiles/*.gemfile.lock
 zuora.log
 Gemfile.lock
