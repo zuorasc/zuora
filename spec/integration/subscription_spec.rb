@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe "Subscription" do
-
   before :each do
     authenticate!
     @account = FactoryGirl.create(:active_account, :account_number => generate_key)
@@ -28,14 +27,15 @@ describe "Subscription" do
     )
 
     request.should be_valid
-    request.create.should == true
-   
+    response = request.create
+    response[:success].should == true
+
     subscriptions = @account.subscriptions
     subscriptions.size.should == 1
 
     subscription = subscriptions.first
     subscription.should be_valid
-    
+
     rps = subscription.rate_plans
     rps.size.should == 1
     rp = rps.first
@@ -52,4 +52,4 @@ describe "Subscription" do
     invoice.invoice_adjustments.should == []
   end
 end
-  
+
