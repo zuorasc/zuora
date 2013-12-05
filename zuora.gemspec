@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/wildfireapp/zuora"
   s.summary     = %q{Zuora - ActiveModel backed client for the Zuora API}
   s.description = %q{Zuora - Easily integrate the Zuora SOAP API using ruby objects.}
-  s.iles         = `git ls-files`.split("\n")
+  s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
   s.extra_rdoc_files = [ "README.md" ]
