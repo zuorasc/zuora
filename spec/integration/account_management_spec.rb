@@ -15,7 +15,7 @@ describe "Account Management" do
 
     describe "adding and manipulating contacts" do
       it "is supported" do
-        contact = FactoryGirl.create(:contact, :account => @account)
+        contact = FactoryGirl.create(:contact, :account => @account, :country => "GB")
         @account.bill_to = contact
         @account.sold_to = contact
         @account.save.should == true
