@@ -1,13 +1,13 @@
 # Zuora [![Build Status](https://secure.travis-ci.org/wildfireapp/zuora.png?branch=master)](http://travis-ci.org/wildfireapp/zuora) [![Gemnasium](https://gemnasium.com/wildfireapp/zuora.png)](https://gemnasium.com/wildfireapp/zuora)
 
-This library allows you to interact with [Zuora](http://www.zuora.com) billing platform directly using 
+This library allows you to interact with [Zuora](http://www.zuora.com) billing platform directly using
 familiar [ActiveModel](https://github.com/rails/rails/tree/master/activemodel) based objects.
 
 ## Requirements
   * [bundler](https://github.com/carlhuda/bundler)
   * [active_support](https://github.com/rails/rails/tree/master/activesupport)
-  * [savon](https://github.com/rubiii/savon)
-  * [wasabi](https://github.com/rubiii/wasabi)
+  * [savon](https://github.com/savonrb/savon)
+  * [wasabi](https://github.com/savonrb/wasabi)
 
 All additional requirements for development should be referenced in the provided zuora.gemspec and Gemfile.
 
@@ -22,25 +22,25 @@ All additional requirements for development should be referenced in the provided
 
 ```
   Zuora.configure(:username => 'USER', :password => 'PASS', sandbox: true, logger: true)
-    
+
   account = Zuora::Objects::Account.new
-   => #<Zuora::Objects::Account:0x00000002cd25b0 @changed_attributes={"auto_pay"=>nil, "currency"=>nil, 
+   => #<Zuora::Objects::Account:0x00000002cd25b0 @changed_attributes={"auto_pay"=>nil, "currency"=>nil,
   "batch"=>nil, "bill_cycle_day"=>nil, "status"=>nil, "payment_term"=>nil}, @auto_pay=false, @currency="USD",
   @batch="Batch1", @bill_cycle_day=1, @status="Draft", @payment_term="Due Upon Receipt">
-  
+
   account.name = "Test"
    => "Test"
-   
+
   account.create
    => true
-  
+
   created_account = Zuora::Objects::Account.find(account.id)
-   => #<Zuora::Objects::Account:0x00000003caafc8 @changed_attributes={}, @auto_pay=false, @currency="USD", 
-  @batch="Batch1", @bill_cycle_day=1, @status="Draft", @payment_term="Due Upon Receipt", 
-  @id="2c92c0f83c1de760013c449bc26e555b", @account_number="A00000008", @allow_invoice_edit=false, 
-  @balance=#<BigDecimal:3c895f8,'0.0',9(18)>, @bcd_setting_option="ManualSet", 
-  @created_by_id="2c92c0f83b02a9dc013b0a7e26a03d00", @created_date=Wed, 16 Jan 2013 10:25:24 -0800, 
-  @invoice_delivery_prefs_email=false, @invoice_delivery_prefs_print=false, @name="Test", 
+   => #<Zuora::Objects::Account:0x00000003caafc8 @changed_attributes={}, @auto_pay=false, @currency="USD",
+  @batch="Batch1", @bill_cycle_day=1, @status="Draft", @payment_term="Due Upon Receipt",
+  @id="2c92c0f83c1de760013c449bc26e555b", @account_number="A00000008", @allow_invoice_edit=false,
+  @balance=#<BigDecimal:3c895f8,'0.0',9(18)>, @bcd_setting_option="ManualSet",
+  @created_by_id="2c92c0f83b02a9dc013b0a7e26a03d00", @created_date=Wed, 16 Jan 2013 10:25:24 -0800,
+  @invoice_delivery_prefs_email=false, @invoice_delivery_prefs_print=false, @name="Test",
   @updated_by_id="2c92c0f83b02a9dc013b0a7e26a03d00", @updated_date=Wed, 16 Jan 2013 10:25:24 -0800>
 ```
 
