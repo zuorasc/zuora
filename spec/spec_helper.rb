@@ -2,7 +2,8 @@ require 'zuora'
 require 'artifice'
 require 'digest/md5'
 require 'factory_girl'
-# require "rspec"
+require "rspec"
+require 'minitest/autorun'
 
 Dir["#{File.dirname(__FILE__)}/../spec/support/**/*.rb"].sort.each { |ext| require ext }
 Dir["#{File.dirname(__FILE__)}/../spec/factories/*.rb"].sort.each { |ext| require ext }
@@ -27,4 +28,12 @@ def ons
   zuora_namespace('http://object.api.zuora.com/')
 end
 
+# Deal with ActiveModel::Lint Minitest integration; define asserts to use a RSpec style
+def assert(thing_to_be_asserted, message = nil)
+  thing_to_be_asserted.should be_true
+end
+
+def assert_kind_of(klass, obj)
+  obj.is_a?(klass).should be_true
+end
 
