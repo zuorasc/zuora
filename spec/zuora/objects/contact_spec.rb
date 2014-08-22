@@ -35,14 +35,11 @@ describe Zuora::Objects::Contact do
     end
 
     context "when persisted record" do
-      before :each do
-        subject.stub(:new_record? => false)
-
-        subject.should_not be_valid
-      end
-
       it "requires account_id" do
-        subject.errors[:account_id].should include("can't be blank")
+        subject.stub(:new_record?, false) do
+          subject.should_not be_valid
+          subject.errors[:account_id].should include("can't be blank")
+        end
       end
     end
   end
