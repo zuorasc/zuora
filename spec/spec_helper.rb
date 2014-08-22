@@ -2,7 +2,7 @@ require 'zuora'
 require 'artifice'
 require 'digest/md5'
 require 'factory_girl'
-require "rspec"
+# require "rspec"
 
 Dir["#{File.dirname(__FILE__)}/../spec/support/**/*.rb"].sort.each { |ext| require ext }
 Dir["#{File.dirname(__FILE__)}/../spec/factories/*.rb"].sort.each { |ext| require ext }
