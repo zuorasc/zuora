@@ -2,7 +2,13 @@ require 'spec_helper'
 
 describe Zuora::Objects::Account do
 
-  it_should_behave_like "ActiveModel"
+  describe "behaves like ActiveModel" do
+    # subject do
+    #   act = Zuora::Objects::Account.new
+    #   act.instance_varible_set(:assertion, 0)
+    # end
+    it_should_behave_like "ActiveModel"
+  end
 
   it "extends Base object" do
     subject.should be_a_kind_of(Zuora::Objects::Base)
