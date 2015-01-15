@@ -21,6 +21,8 @@ module Zuora::Objects
     validates_inclusion_of :type, :in => ['Cancellation', 'NewProduct', 'OwnerTransfer', 'RemoveProduct', 'Renewal', 'UpdateProduct', 'TermsAndConditions']
     validates_presence_of :rate_plan_data, :if => Proc.new { |a| ['NewProduct', 'RemoveProduct', 'UpdateProduct'].include?(a.type) }
 
+    store_accessors :amend_options
+
     attr_accessor :amendment_ids
     attr_accessor :invoice_id
     attr_accessor :payment_transaction_number
@@ -47,6 +49,13 @@ module Zuora::Objects
       else
         self.errors.add(:base, result[:errors][:message])
         return false
+      end
+    end
+
+    # Implementation adapted from jmoline/zuora 54cdde65a5de761162cbc6bbdd930082349582fb
+    def generate_amend_options(builder)
+      amend_options.each do |k,v|
+        builder.__send__(zns, k.to_s.camelize.to_sym, v)
       end
     end
   end
