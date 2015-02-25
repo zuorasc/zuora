@@ -44,14 +44,6 @@ All additional requirements for development should be referenced in the provided
   @updated_by_id="2c92c0f83b02a9dc013b0a7e26a03d00", @updated_date=Wed, 16 Jan 2013 10:25:24 -0800>
 ```
 
-## Documentation
-  You can generate up to date documentation with the provided rake task.
-
-    $ rake doc
-    $ open doc/index.html
-
-## Advanced Usage
-  Review the generated documentation for usage patterns and examples of using specific zObjects.
 
 ## Test Suite
   This library comes with a full test suite, which can be ran using the standard rake utility.
