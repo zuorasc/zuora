@@ -13,7 +13,7 @@ All additional requirements for development should be referenced in the provided
 
 ## Installation
 
-    git clone git@github.com:wildfireapp/zuora.git
+    git clone git@github.com:zuorasc/zuora.git
 
 ## Getting Started
 
