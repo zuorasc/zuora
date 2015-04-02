@@ -20,6 +20,8 @@ module Zuora
   class Api
     include Singleton
 
+    I18n.enforce_available_locales = false
+
     # @return [Savon::Client]
     def client
       @client ||= make_client
@@ -80,7 +82,6 @@ module Zuora
         yield xml
         options[:message] = xml.target!
       end
-
       client.call(method, options)
     rescue Savon::SOAPFault, IOError => e
       raise Zuora::Fault.new(:message => e.message)

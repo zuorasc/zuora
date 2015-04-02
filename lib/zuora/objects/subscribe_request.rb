@@ -8,6 +8,7 @@ module Zuora::Objects
     attr_accessor :product_rate_plans
 
     store_accessors :subscribe_options
+    store_accessors :preview_options
 
     validate do |request|
       request.must_have_usable(:account)
@@ -39,16 +40,12 @@ module Zuora::Objects
 
     # Generate a subscription request
     def create
-      return false unless valid?
+      #return false unless valid?
       result = Zuora::Api.instance.request(:subscribe) do |xml|
         xml.__send__(zns, :subscribes) do |s|
           s.__send__(zns, :Account) do |a|
             generate_object(a, account)
           end
-
-          s.__send__(zns, :SubscribeOptions) do |so|
-            generate_subscribe_options(so)
-          end unless subscribe_options.blank?
 
           s.__send__(zns, :PaymentMethod) do |pm|
             generate_object(pm, payment_method)
@@ -58,9 +55,17 @@ module Zuora::Objects
             generate_object(btc, bill_to_contact)
           end
 
+          s.__send__(zns, :PreviewOptions) do |po|
+            generate_preview_options(po)
+          end unless preview_options.blank?
+
           s.__send__(zns, :SoldToContact) do |btc|
             generate_object(btc, sold_to_contact)
           end unless sold_to_contact.nil?
+
+          s.__send__(zns, :SubscribeOptions) do |so|
+            generate_subscribe_options(so)
+          end unless subscribe_options.blank?
 
           s.__send__(zns, :SubscriptionData) do |sd|
             sd.__send__(zns, :Subscription) do |sub|
@@ -77,6 +82,7 @@ module Zuora::Objects
           end
         end
       end
+
       apply_response(result.to_hash, :subscribe_response)
     end
 
@@ -120,7 +126,13 @@ module Zuora::Objects
 
     def generate_subscribe_options(builder)
       subscribe_options.each do |k,v|
-        builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v)
+        builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
+      end
+    end
+
+    def generate_preview_options(builder)
+      preview_options.each do |k,v|
+        builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
       end
     end
 
