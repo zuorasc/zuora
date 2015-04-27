@@ -14,6 +14,8 @@ module Zuora
 
     if Api.instance.config.sandbox
       Api.instance.sandbox!
+    elsif Api.instance.config.services
+      Api.instance.set_endpoint Api.instance.config.custom_url
     end
   end
 
@@ -55,6 +57,12 @@ module Zuora
     def sandbox!
       @client = nil
       self.class.instance.client.globals[:endpoint] = SANDBOX_ENDPOINT
+    end
+
+    #change the client to a specific endpoint
+    def set_endpoint(endpoint)
+      @client = nil
+      self.class.instance.client.globals[:endpoint] = endpoint
     end
 
     # Callback from Savon observer. Sets the @last_request
