@@ -20,8 +20,8 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency(%q<wasabi>, ["~> 3.2.0"])
   s.add_runtime_dependency(%q<savon>, ["~> 2.3.0"])
-  s.add_runtime_dependency(%q<activesupport>, [">= 3.0.0", "< 4.0.0"])
-  s.add_runtime_dependency(%q<activemodel>, [">= 3.0.0", "< 4.0.0"])
+  s.add_runtime_dependency(%q<activesupport>, [">= 3.0.0"])
+  s.add_runtime_dependency(%q<activemodel>, [">= 3.0.0"])
   s.add_runtime_dependency(%q<libxml4r>, ['~> 0.2.6'])
 
   s.add_development_dependency(%q<rake>, ["~> 10.1.0"])
