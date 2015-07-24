@@ -53,6 +53,8 @@ module Zuora::Objects
         :includes_usage => true,
         :invoice_date => Proc.new { Date.today }
       )
+
+      defer :body
     end
   end
 end
