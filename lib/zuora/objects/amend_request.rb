@@ -52,13 +52,7 @@ module Zuora::Objects
     end
 
     def generate_object(builder, object)
-      if object.new_record?
-        object.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
-        end
-      else
-        builder.__send__(ons, :Id, object.id)
-      end
+      builder.__send__(ons, :Id, object.id)
     end
 
     def generate_amend_options(builder)
