@@ -116,8 +116,10 @@ module Zuora
 
     # Zuora doesn't like the default string format of ruby dates/times
     def convert_value(value)
-      if [Date, Time, DateTime].any? { |klass| value.is_a?(klass) }
+      if [Time, DateTime].any? { |klass| value.is_a?(klass) }
         value.strftime('%FT%T')
+      elsif value.is_a?(Date)
+        value.strftime('%F')
       else
         value
       end

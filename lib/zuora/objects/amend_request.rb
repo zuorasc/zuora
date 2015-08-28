@@ -2,13 +2,14 @@ module Zuora::Objects
   class AmendRequest < Base
     attr_accessor :amendment
 
-    store_accessors :amend_options
+    store_accessors :external_payment_options
 
     validate do |request|
       request.must_have_usable(:amendment)
     end
 
-    # used to validate nested objects
+    # If we have an amendment, verify that it's
+    # valid before proceeding
     def must_have_usable(ref)
       obj = self.send(ref)
       return errors[ref] << "must be provided" if obj.blank?
@@ -20,17 +21,19 @@ module Zuora::Objects
       end
     end
 
-    # Generate and request an AmendRequest xml object
-    def update
+    # Generate an AmendRequest object
+    def create
       result = Zuora::Api.instance.request(:amend) do |xml|
         xml.__send__(zns, :requests) do |r|
-          s.__send__(zns, :Amendments) do |a|
+          r.__send__(zns, :Amendments) do |a|
             generate_object(a, amendment)
           end
 
-          s.__send__(zns, :AmendOptions) do |a|
-            generate_amend_options(a)
-          end unless amend_options.blank?
+          r.__send__(zns, :AmendOptions) do |a|
+            a.__send__(zns, :ExternalPaymentOptions) do |epo|
+              generate_external_payment_options(epo)
+            end
+          end unless external_payment_options.blank?
         end
       end
 
@@ -40,7 +43,7 @@ module Zuora::Objects
     protected
 
     def apply_response(response_hash, type)
-      result = response_hash[type][:result]
+      result = response_hash[type][:results]
       if result[:success]
         amendment.clear_changed_attributes!
         @previously_changed = changes
@@ -52,19 +55,13 @@ module Zuora::Objects
     end
 
     def generate_object(builder, object)
-      builder.__send__(ons, :Id, object.id)
-    end
-
-    def generate_amend_options(builder)
-      amend_options.each do |k,v|
-        builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
+      if object.new_record?
+        object.to_hash.each do |k,v|
+          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, convert_value(v)) unless v.nil?
+        end
+      else
+        builder.__send__(ons, :Id, object.id)
       end
-
-      builder.__send__(zns, :ExternalPaymentOptions) do |epo|
-        generate_external_payment_options(epo)
-      end unless amend_options[:external_payment_options].blank?
-
-      # TODO: Implement missing InvoiceProcessingOptions container
     end
 
     def generate_external_payment_options(builder)
@@ -73,12 +70,23 @@ module Zuora::Objects
       end
     end
 
+    # Zuora doesn't like the default string format of ruby dates/times
+    def convert_value(value)
+      if [Time, DateTime].any? { |klass| value.is_a?(klass) }
+        value.strftime('%FT%T')
+      elsif value.is_a?(Date)
+        value.strftime('%F')
+      else
+        value
+      end
+    end
+
     # TODO: Restructute an intermediate class that includes
     # persistence only within ZObject models.
     # These methods are not relevant, but defined in Base
     def find ; end
     def where ; end
-    def create ; end
+    def update ; end
     def destroy ; end
     def save ; end
   end
