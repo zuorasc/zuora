@@ -4,7 +4,6 @@ module Zuora::Objects
 
     validates_presence_of :currency
 
-    # validates_inclusion_of :active, :in => [true, false]
     validates_inclusion_of :is_overage_price, :in => [true, false], :allow_nil => true
     validates_inclusion_of :price_format, :in => ['Flat Fee', 'Per Unit'], :allow_nil => true
     validates_numericality_of :price, :greater_than => 0
