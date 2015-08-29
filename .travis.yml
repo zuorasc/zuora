@@ -1,6 +1,6 @@
 language: ruby
-before_script: "bundle exec rake appraisal:install"
-script: "bundle exec rake appraisal spec"
+before_script: "bundle install"
+script: "rake spec"
 rvm:
   - 2.2.2
 notifications:
