@@ -15,8 +15,8 @@ module Zuora::Objects
     validates_numericality_of :amount
     validates_numericality_of :balance, :allow_nil => true
     validates_length_of       :comments, :maximum => 255
-    validates_datetime_of     :due_date
-    validates_datetime_of     :invoice_date
+    validates_date_of         :due_date
+    validates_date_of         :invoice_date
     validates_inclusion_of    :includes_one_time, :in => [true, false]
     validates_inclusion_of    :includes_recurring, :in => [true, false]
     validates_inclusion_of    :includes_usage, :in => [true, false]
@@ -26,7 +26,7 @@ module Zuora::Objects
     validates_datetime_of     :posted_date, :allow_nil => true
     validates_numericality_of :refund_amount, :allow_nil => true
     validates_inclusion_of    :status, :in => %w(Canceled Draft Error Posted), :allow_nil => true
-    validates_datetime_of     :target_date
+    validates_date_of         :target_date
     validates_inclusion_of    :transferred_to_accounting, :in => %w(Processing Yes Error Ignore), :allow_nil => true
     validates_datetime_of     :updated_date
 
@@ -47,12 +47,17 @@ module Zuora::Objects
         :updated_by_id,
         :updated_date
       )
+      write_only(
+        :regenerate_invoice_pdf
+      )
       defaults(
         :includes_one_time => true,
         :includes_recurring => true,
         :includes_usage => true,
         :invoice_date => Proc.new { Date.today }
       )
+
+      defer :body, :bill_run_id
     end
   end
 end

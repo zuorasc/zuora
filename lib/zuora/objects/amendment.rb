@@ -28,6 +28,8 @@ module Zuora::Objects
     define_attributes do
       read_only :created_by_id, :created_date, :updated_by_id, :updated_date, :amendment_ids, :invoice_id, :payment_transaction_number
       defaults :status => 'Draft'
+      write_only :rate_plan_data
+      defer :destination_account_id, :destination_invoice_owner_id
     end
 
     def create

@@ -9,6 +9,7 @@ module Zuora::Objects
 
     define_attributes do
       read_only :updated_by_id, :updated_date, :created_by_id, :created_date
+      defer :active_currencies
     end
   end
 end

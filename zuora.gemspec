@@ -34,5 +34,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<appraisal>, ["~> 0.4.1"])
   s.add_development_dependency(%q<sqlite3>, ["~> 1.3.0"])
   s.add_development_dependency(%q<test-unit>, ["~> 3.1.3"])
+  s.add_development_dependency(%q<dotenv>, ["~> 2.0.2"])
   s.add_development_dependency('byebug')
 end

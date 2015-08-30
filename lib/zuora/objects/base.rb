@@ -144,6 +144,12 @@ module Zuora::Objects
       apply_response(result.to_hash, :delete_response)
     end
 
+    # call generate on the object
+    def generate
+      result = self.connector.generate
+      apply_response(result.to_hash, :generate_response)
+    end
+
     def self.connector_class
       @@connector_class ||= Zuora::SoapConnector
     end

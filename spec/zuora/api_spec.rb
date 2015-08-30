@@ -12,7 +12,7 @@ describe Zuora::Api do
 
     it "can be configured to use sandbox" do
       Zuora.configure(:username => 'example', :password => 'test', :sandbox => true)
-      Zuora::Api.instance.client.globals[:endpoint].to_s.should == "https://apisandbox.zuora.com/apps/services/a/38.0"
+      Zuora::Api.instance.client.globals[:endpoint].to_s.should == "https://apisandbox.zuora.com/apps/services/a/69.0"
     end
 
     it "can be configured multiple times" do

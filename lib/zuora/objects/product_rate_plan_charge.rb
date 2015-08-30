@@ -16,7 +16,6 @@ module Zuora::Objects
     INCLUDED_UNITS              = ['Tiered Pricing','Tiered with Overage Pricing','Volume Pricing']
     OVERAGE_CALCULATION_OPTIONS = %w(EndOfSmoothingPeriod PerBillingPeriod)
     OVERAGE_UNUSED_UNITS_CREDIT_OPTIONS = %w(NoCredit CreditBySpecificRate)
-    PRICE_INCREASE_OPTIONS = %w(FromTenantPercentageValue SpecificPercentageValue)
     REV_REC_TRIGGER_CONDITIONS =  %w(ContractEffectiveDate ServiceActivationDate CustomerAcceptanceDate)
     SMOOTHING_MODELS = %w(RollingWindow Rollover)
 
@@ -37,7 +36,6 @@ module Zuora::Objects
     validates_numericality_of :bill_cycle_day, :only_integer => true, :allow_nil => true
     validates_inclusion_of :overage_calculation_option, :in => OVERAGE_CALCULATION_OPTIONS, :allow_nil => true
     validates_inclusion_of :overage_unused_units_credit_option, :in => OVERAGE_UNUSED_UNITS_CREDIT_OPTIONS, :allow_nil => true
-    validates_inclusion_of :price_increase_option, :in => PRICE_INCREASE_OPTIONS, :allow_nil => true
     validates_numericality_of :price_increase_percentage, :only_integer => true, :less_than_or_equal_to => 100, :greater_than_or_equal_to => -100, :allow_nil => true
     validates_inclusion_of :rev_rec_trigger_condition, :in => REV_REC_TRIGGER_CONDITIONS, :allow_nil => true
     validates_inclusion_of :smoothing_model, :in => SMOOTHING_MODELS
