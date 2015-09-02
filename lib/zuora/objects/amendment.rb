@@ -6,7 +6,7 @@ module Zuora::Objects
     validates_length_of :name, :maximum => 100
     validates_inclusion_of :auto_renew, :in => [true, false], :allow_nil => true
     validates_length_of :code, :maximum => 50, :allow_nil => true
-    validates_datetime_of :contract_effective_date, :allow_nil => true
+    validates_date_of :contract_effective_date, :allow_nil => true
     validates_datetime_of :customer_acceptance_date, :allow_nil => true
     validates_datetime_of :effective_date, :allow_nil => true
     validates_datetime_of :service_activation_date, :if => Proc.new { |a| a.status == 'PendingAcceptance' }
