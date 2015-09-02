@@ -16,7 +16,7 @@ describe Zuora::Objects::AmendRequest do
       name: 'Example Amendment',
       status: 'Completed',
       type: 'Renewal',
-      contract_effective_date: DateTime.now
+      contract_effective_date: Date.today
     )
   }
 
@@ -66,7 +66,7 @@ describe Zuora::Objects::AmendRequest do
         xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Type").with_value(amendment.type)
         xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Name").with_value(amendment.name)
         xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Status").with_value(amendment.status)
-        xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:ContractEffectiveDate").with_value(amendment.contract_effective_date.strftime('%FT%T'))
+        xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:ContractEffectiveDate").with_value(amendment.contract_effective_date.strftime('%F'))
       end
       it 'should supply external_payment_options' do
         MockResponse.responds_with(:amend_request_success) do
