@@ -12,10 +12,10 @@ describe Zuora::Objects::Account do
     subject.attributes.keys.map(&:to_s).sort.should ==
       ["account_number", "additional_email_addresses", "allow_invoice_edit", "auto_pay", "balance",
        "batch", "bcd_setting_option", "bill_cycle_day", "bill_to_id", "communication_profile_id",
-       "created_by_id", "created_date", "crm_id", "currency", "customer_service_rep_name",
+       "created_by_id", "created_date", "credit_balance","crm_id", "currency", "customer_service_rep_name",
        "default_payment_method_id", "id", "invoice_delivery_prefs_email", "invoice_delivery_prefs_print",
-       "invoice_template_id", "last_invoice_date", "name", "notes", "payment_gateway", "payment_term",
-       "purchase_order_number", "sales_rep_name", "sold_to_id", "status", "updated_by_id", "updated_date"]
+       "invoice_template_id", "last_invoice_date", "name", "notes", "parent_id", "payment_gateway", "payment_term",
+       "purchase_order_number", "sales_rep_name", "sold_to_id", "status", "total_invoice_balance", "updated_by_id", "updated_date"]
   end
 
   it "has read only attributes" do
@@ -33,7 +33,7 @@ describe Zuora::Objects::Account do
         subject.currency = 'USD'
         subject.status = 'Draft'
         subject.should be_changed
-        subject.changes.keys.sort.should == ["name", "auto_pay", "payment_term", "account_number", "currency", "batch", "bill_cycle_day", "status"].sort
+        subject.changes.keys.sort.should == ["name", "auto_pay", "payment_term", "account_number", "currency", "batch", "status"].sort
         subject.save.should == true
         subject.should_not be_changed
       end
@@ -47,7 +47,6 @@ describe Zuora::Objects::Account do
   it "has default values" do
     subject.auto_pay.should == false
     subject.batch.should == 'Batch1'
-    subject.bill_cycle_day.should == 1
     subject.payment_term.should == 'Due Upon Receipt'
   end
 
@@ -131,8 +130,6 @@ describe Zuora::Objects::Account do
           with_value('Batch1')
         xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AutoPay").
           with_value('false')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:BillCycleDay").
-          with_value('1')
         xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Currency").
           with_value('USD')
         xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:PaymentTerm").

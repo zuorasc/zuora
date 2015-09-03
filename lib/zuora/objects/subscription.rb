@@ -12,7 +12,7 @@ module Zuora::Objects
     validates_inclusion_of    :auto_renew, :in => [true, false]
     validates_datetime_of     :cancelled_date, :allow_nil => true
     validates_datetime_of     :contract_acceptance_date, :allow_nil => true
-    validates_datetime_of     :contract_effective_date
+    validates_date_of         :contract_effective_date
     validates_numericality_of :initial_term, :only_integer => true, :minimum => 1
     validates_inclusion_of    :is_invoice_separate, :in => [true, false], :allow_nil => true
     validates_length_of       :name, :maximum => 100
@@ -34,6 +34,8 @@ module Zuora::Objects
                :initial_term        => 1,
                :is_invoice_separate => false,
                :renewal_term        => 0
+
+      defer :ancestor_account_id
     end
   end
 end

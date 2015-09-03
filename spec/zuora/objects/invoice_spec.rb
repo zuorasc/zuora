@@ -3,11 +3,11 @@ require 'spec_helper'
 describe Zuora::Objects::Invoice do
 
   it "validates datetime of several attributes" do
-    [:due_date, :invoice_date, :last_email_sent_date, :posted_date, :target_date, :updated_date,].each do |attr|
+    [:due_date, :invoice_date, :target_date,].each do |attr|
       subject.errors.clear
       subject.send("#{attr}=", 'invalid')
       subject.should_not be_valid
-      subject.errors[attr].should include('is not a valid datetime')
+      subject.errors[attr].should include('is not a valid date')
     end
     [:due_date, :invoice_date, :last_email_sent_date, :posted_date, :target_date, :updated_date,].each do |attr|
       subject.errors.clear

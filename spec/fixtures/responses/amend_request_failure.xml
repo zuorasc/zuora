@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+  <soapenv:Body>
+    <ns1:amendResponse xmlns:ns1="http://api.zuora.com/">
+      <ns1:results>
+        <ns1:Errors>
+          <ns1:Code>INVALID_VALUE</ns1:Code>
+          <ns1:Message>Invalid value for field SubscriptionId: 2c92c0f84f6deb9b014f718d29bb35b1</ns1:Message>
+        </ns1:Errors>
+        <ns1:Success>false</ns1:Success>
+      </ns1:results>
+    </ns1:amendResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

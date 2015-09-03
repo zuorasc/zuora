@@ -39,9 +39,9 @@ module Zuora
     # @return [Hash]
     attr_accessor :options
 
-    WSDL = File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
+    WSDL = File.expand_path('../../../wsdl/zuora.a.69.0.wsdl', __FILE__)
     SOAP_VERSION = 2
-    SANDBOX_ENDPOINT = 'https://apisandbox.zuora.com/apps/services/a/38.0'
+    SANDBOX_ENDPOINT = 'https://apisandbox.zuora.com/apps/services/a/69.0'
 
     def wsdl
       client.instance_variable_get(:@wsdl)
@@ -120,7 +120,7 @@ module Zuora
     end
 
     def make_client
-      Savon.client(wsdl: WSDL, soap_version: SOAP_VERSION, log: config.log || false, logger: config.logger, ssl_verify_mode: :none)
+      Savon.client(wsdl: WSDL, soap_version: SOAP_VERSION, log: config.log || false, logger: config.logger, ssl_verify_mode: :none, pretty_print_xml: config.debug)
     end
 
   end
