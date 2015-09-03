@@ -33,7 +33,7 @@ describe Zuora::Objects::Account do
         subject.currency = 'USD'
         subject.status = 'Draft'
         subject.should be_changed
-        subject.changes.keys.sort.should == ["name", "auto_pay", "payment_term", "account_number", "currency", "batch", "bill_cycle_day", "status"].sort
+        subject.changes.keys.sort.should == ["name", "auto_pay", "payment_term", "account_number", "currency", "batch", "status"].sort
         subject.save.should == true
         subject.should_not be_changed
       end
@@ -47,7 +47,6 @@ describe Zuora::Objects::Account do
   it "has default values" do
     subject.auto_pay.should == false
     subject.batch.should == 'Batch1'
-    subject.bill_cycle_day.should == 1
     subject.payment_term.should == 'Due Upon Receipt'
   end
 
@@ -131,8 +130,6 @@ describe Zuora::Objects::Account do
           with_value('Batch1')
         xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:AutoPay").
           with_value('false')
-        xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:BillCycleDay").
-          with_value('1')
         xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:Currency").
           with_value('USD')
         xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:PaymentTerm").
