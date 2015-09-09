@@ -28,6 +28,13 @@ describe Zuora::Objects::AmendRequest do
     }
   }
 
+  let(:amend_options) {
+    {
+      generate_invoice: false,
+      process_payments: false
+    }
+  }
+
   describe "validations" do
     describe "#must_have_usable" do
       context "on amendment" do
@@ -67,6 +74,16 @@ describe Zuora::Objects::AmendRequest do
         xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Name").with_value(amendment.name)
         xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:Status").with_value(amendment.status)
         xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:ContractEffectiveDate").with_value(amendment.contract_effective_date.strftime('%F'))
+      end
+      it 'should supply amend_options' do
+        MockResponse.responds_with(:amend_request_success) do
+          subject.amend_options = amend_options
+          subject.create
+        end
+
+        xml = Zuora::Api.instance.last_request
+        xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:AmendOptions/#{zns}:GenerateInvoice").with_value(amend_options[:generate_invoice])
+        xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:AmendOptions/#{zns}:ProcessPayments").with_value(amend_options[:process_payments])
       end
       it 'should supply external_payment_options' do
         MockResponse.responds_with(:amend_request_success) do
