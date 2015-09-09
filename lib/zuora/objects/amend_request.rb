@@ -28,6 +28,10 @@ module Zuora::Objects
         xml.__send__(zns, :requests) do |r|
           r.__send__(zns, :Amendments) do |a|
             generate_object(a, amendment)
+
+            unless amendment.rate_plan_data.nil?
+              serialize(a, :RatePlanData, amendment.rate_plan_data)
+            end
           end
 
           r.__send__(zns, :AmendOptions) do |ao|
@@ -60,7 +64,9 @@ module Zuora::Objects
     def generate_object(builder, object)
       if object.new_record?
         object.to_hash.each do |k,v|
-          builder.__send__(ons, k.to_s.zuora_camelize.to_sym, convert_value(v)) unless v.nil?
+          unless v.nil? || v.kind_of?(Zuora::Objects::Base)
+            builder.__send__(ons, k.to_s.zuora_camelize.to_sym, convert_value(v))
+          end
         end
       else
         builder.__send__(ons, :Id, object.id)
@@ -76,6 +82,18 @@ module Zuora::Objects
     def generate_external_payment_options(builder)
       external_payment_options.each do |k,v|
         builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
+      end
+    end
+
+    def serialize(xml, key, value)
+      if value.kind_of?(Zuora::Objects::Base)
+        xml.__send__(ons, key.to_sym) do |child|
+          value.to_hash.each do |k, v|
+            serialize(child, k.to_s.zuora_camelize, convert_value(v)) unless v.nil?
+          end
+        end
+      else
+        xml.__send__(zns, key.to_sym, convert_value(value))
       end
     end
 

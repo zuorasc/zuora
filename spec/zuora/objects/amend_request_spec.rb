@@ -97,6 +97,26 @@ describe Zuora::Objects::AmendRequest do
         xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:AmendOptions/#{zns}:ExternalPaymentOptions/#{zns}:EffectiveDate").with_value(external_payment_options[:effective_date])
         xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:AmendOptions/#{zns}:ExternalPaymentOptions/#{zns}:PaymentMethodId").with_value(external_payment_options[:payment_method_id])
       end
+      it 'should add the rate_plan_data complex type when defined' do
+        MockResponse.responds_with(:amend_request_success) do
+          rate_plan = Zuora::Objects::RatePlan.new(
+            product_rate_plan_id: '2c92c0f84f6deb9b014f718d29bb35b1'
+          )
+          rate_plan_data = Zuora::Objects::RatePlanData.new
+          rate_plan_data.rate_plan = rate_plan
+
+          subject.amendment.rate_plan_data = rate_plan_data
+          subject.create
+        end
+
+        xml = Zuora::Api.instance.last_request
+        xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments")
+        xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:RatePlanData")
+        xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:RatePlanData/#{ons}:RatePlan")
+        xml.should have_xml("//env:Body/#{zns}:amend/#{zns}:requests/#{zns}:Amendments/#{ons}:RatePlanData/#{ons}:RatePlan/#{zns}:ProductRatePlanId").with_value(
+            subject.amendment.rate_plan_data.rate_plan.product_rate_plan_id
+          )
+      end
     end
   end
 
