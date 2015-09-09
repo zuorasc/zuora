@@ -3,6 +3,7 @@ module Zuora::Objects
     attr_accessor :amendment
 
     store_accessors :external_payment_options
+    store_accessors :amend_options
 
     validate do |request|
       request.must_have_usable(:amendment)
@@ -29,11 +30,13 @@ module Zuora::Objects
             generate_object(a, amendment)
           end
 
-          r.__send__(zns, :AmendOptions) do |a|
-            a.__send__(zns, :ExternalPaymentOptions) do |epo|
+          r.__send__(zns, :AmendOptions) do |ao|
+            generate_amend_options(ao)
+
+            ao.__send__(zns, :ExternalPaymentOptions) do |epo|
               generate_external_payment_options(epo)
-            end
-          end unless external_payment_options.blank?
+            end unless external_payment_options.blank?
+          end
         end
       end
 
@@ -61,6 +64,12 @@ module Zuora::Objects
         end
       else
         builder.__send__(ons, :Id, object.id)
+      end
+    end
+
+    def generate_amend_options(builder)
+      amend_options.each do |k,v|
+        builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
       end
     end
 
