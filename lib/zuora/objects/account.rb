@@ -13,7 +13,7 @@ module Zuora::Objects
     validates_inclusion_of :payment_term, :in => ['Due Upon Receipt','Net 30','Net 45','Net 90']
     validates_inclusion_of :batch, :in => (1..20).map{|n| "Batch#{n}" }
     validates_inclusion_of :bcd_setting_option, :in => ['AutoSet','ManualSet'], :allow_nil => true
-    validates_inclusion_of :bill_cycle_day, :in => (1..31).to_a + (1..31).map(&:to_s)
+    validates_inclusion_of :bill_cycle_day, :in => (1..31).to_a + (1..31).map(&:to_s), :if => Proc.new { |a| a.bcd_setting_option && a.bcd_setting_option == "ManualSet" }
     validates_inclusion_of :status, :in => ['Draft','Active','Canceled'], :allow_nil => true
 
     define_attributes do
@@ -24,7 +24,6 @@ module Zuora::Objects
       defaults :auto_pay => false,
                :currency => 'USD',
                :batch => 'Batch1',
-               :bill_cycle_day => 1,
                :status => 'Draft',
                :payment_term => 'Due Upon Receipt'
     end

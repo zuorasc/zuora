@@ -12,7 +12,6 @@ module Zuora::Objects
 
     validate do |request|
       request.must_have_usable(:account)
-      request.must_have_usable(:payment_method)
       request.must_have_usable(:bill_to_contact)
       request.must_have_usable(:product_rate_plans)
       request.must_have_new(:subscription)
@@ -49,7 +48,7 @@ module Zuora::Objects
 
           s.__send__(zns, :PaymentMethod) do |pm|
             generate_object(pm, payment_method)
-          end
+          end unless payment_method.nil?
 
           s.__send__(zns, :BillToContact) do |btc|
             generate_object(btc, bill_to_contact)

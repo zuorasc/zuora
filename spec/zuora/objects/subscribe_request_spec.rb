@@ -186,7 +186,7 @@ describe Zuora::Objects::SubscribeRequest do
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscribeOptions/#{ons}:GenerateInvoice").
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscribeOptions/#{zns}:GenerateInvoice").
         with_value(true)
     end
 

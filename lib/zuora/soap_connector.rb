@@ -58,14 +58,14 @@ module Zuora
       end
     end
 
-    def amend
+    def amend(action: :create)
       Zuora::Api.instance.request(:amend) do |xml|
         xml.__send__(zns, :requests) do |r|
           r.__send__(zns, :Amendments) do |a|
             @model.to_hash.each do |k,v|
               serialize(a, k.to_s.zuora_camelize.to_sym, convert_value(v)) unless v.nil?
             end
-            generate_complex_objects(a, :create)
+            generate_complex_objects(a, action)
           end
         end
       end
@@ -116,8 +116,10 @@ module Zuora
 
     # Zuora doesn't like the default string format of ruby dates/times
     def convert_value(value)
-      if [Date, Time, DateTime].any? { |klass| value.is_a?(klass) }
+      if [Time, DateTime].any? { |klass| value.is_a?(klass) }
         value.strftime('%FT%T')
+      elsif value.is_a?(Date)
+        value.strftime('%F')
       else
         value
       end

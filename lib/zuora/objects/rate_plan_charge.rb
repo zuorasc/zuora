@@ -75,7 +75,7 @@ module Zuora::Objects
         :rollover_balance, :tcv, :updated_by_id, :update_date, :version
       )
 
-      defer :rollover_balance, :overage_price, :price, :included_units, :discount_amount, :discount_percentage
+      defer :rollover_balance, :overage_price, :price, :included_units, :discount_amount, :discount_percentage, :revenue_recognition_rule_name
 
       defaults(
         :overage_calculation_option => 'EndOfSmoothingPeriod',

@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency(%q<activemodel>, [">= 3.0.0"])
   s.add_runtime_dependency(%q<libxml4r>, ['~> 0.2.6'])
 
-  s.add_development_dependency(%q<rake>, ["~> 10.1.0"])
+  s.add_development_dependency(%q<rake>, ["~> 10.4.2"])
   s.add_development_dependency(%q<guard-rspec>, ["~> 0.6.0"])
   s.add_development_dependency(%q<artifice>, ["~> 0.6.0"])
   s.add_development_dependency(%q<yard>, ["~> 0.7.5"])
@@ -33,5 +33,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<factory_girl>, ["~> 2.6.4"])
   s.add_development_dependency(%q<appraisal>, ["~> 0.4.1"])
   s.add_development_dependency(%q<sqlite3>, ["~> 1.3.0"])
+  s.add_development_dependency(%q<test-unit>, ["~> 3.1.3"])
+  s.add_development_dependency(%q<dotenv>, ["~> 2.0.2"])
   s.add_development_dependency('byebug')
 end
