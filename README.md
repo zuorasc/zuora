@@ -21,7 +21,7 @@ All additional requirements for development should be referenced in the provided
     $ bundle exec irb -rzuora
 
 ```
-  Zuora.configure(:username => 'USER', :password => 'PASS', sandbox: true, logger: true)
+  Zuora.configure(:username => 'USER', :password => 'PASS', sandbox: true, log: true)
     
   account = Zuora::Objects::Account.new
    => #<Zuora::Objects::Account:0x00000002cd25b0 @changed_attributes={"auto_pay"=>nil, "currency"=>nil, 
