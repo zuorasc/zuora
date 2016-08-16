@@ -30,4 +30,3 @@ module Zuora::Objects
     end
   end
 end
-

@@ -63,14 +63,12 @@ describe Zuora::Objects::ProductRatePlanCharge do
 
     tier1 = Zuora::Objects::ProductRatePlanChargeTier.new do |t|
       t.price = 0
-      t.active = true
       t.starting_unit = 0
       t.ending_unit = 10
     end
 
     tier2 = Zuora::Objects::ProductRatePlanChargeTier.new do |t|
       t.price = 50
-      t.active = true
       t.starting_unit = 11
       t.ending_unit = 20
     end
@@ -88,7 +86,6 @@ describe Zuora::Objects::ProductRatePlanCharge do
     xml = Zuora::Api.instance.last_request
     xml.should have_xml("//env:Body/#{zns}:create/#{zns}:zObjects/#{ons}:ProductRatePlanChargeTierData")
     xml.should have_xml("//#{ons}:ProductRatePlanChargeTierData/#{zns}:ProductRatePlanChargeTier")
-    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:Active").with_value(true)
     xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:Price").with_value(50)
     xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:StartingUnit").with_value(11)
     xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:EndingUnit").with_value(20)
@@ -101,8 +98,8 @@ describe Zuora::Objects::ProductRatePlanCharge do
     @prpct.map(&:new_record?).should be_none, 'complex objects should not be new records after save'
 
     @prpc.product_rate_plan_charge_tiers.first.price = 20
-    @prpc.product_rate_plan_charge_tiers.first.price.should == 20 
-  
+    @prpc.product_rate_plan_charge_tiers.first.price.should == 20
+
     MockResponse.responds_with(:product_rate_plan_charge_update_success) do
       @prpc.save.should == true
     end
@@ -111,12 +108,11 @@ describe Zuora::Objects::ProductRatePlanCharge do
     xml.should have_xml("//env:Body/#{zns}:update/#{zns}:zObjects/#{ons}:ProductRatePlanChargeTierData")
     xml.should have_xml("//env:Body/#{zns}:update/#{zns}:zObjects/#{ons}:Id")
     xml.should have_xml("//#{ons}:ProductRatePlanChargeTierData/#{zns}:ProductRatePlanChargeTier")
-    xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:Active").with_value(true)
     xml.should have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:Price").with_value(20)
     xml.should_not have_xml("//#{zns}:ProductRatePlanChargeTier/#{zns}:Id")
     xml.should_not have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:StartingUnit")
     xml.should_not have_xml("//#{zns}:ProductRatePlanChargeTier/#{ons}:EndingUnit")
-    
+
     MockResponse.responds_with(:product_rate_plan_charge_destroy_success) do
       @prpc.destroy
     end

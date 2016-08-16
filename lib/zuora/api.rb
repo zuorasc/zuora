@@ -11,7 +11,6 @@ module Zuora
   # @return [Config]
   def self.configure(opts={})
     Api.instance.config = Config.new(opts)
-
     if Api.instance.config.sandbox
       Api.instance.sandbox!
     elsif Api.instance.config.services
@@ -39,9 +38,9 @@ module Zuora
     # @return [Hash]
     attr_accessor :options
 
-    WSDL = File.expand_path('../../../wsdl/zuora.a.38.0.wsdl', __FILE__)
+    WSDL = File.expand_path('../../../wsdl/zuora.a.78.0.wsdl', __FILE__)
     SOAP_VERSION = 2
-    SANDBOX_ENDPOINT = 'https://apisandbox.zuora.com/apps/services/a/38.0'
+    SANDBOX_ENDPOINT = 'https://apisandbox.zuora.com/apps/services/a/78.0'
 
     def wsdl
       client.instance_variable_get(:@wsdl)
@@ -128,4 +127,3 @@ module Zuora
   # Support request tracking via notify
   Savon.observers << Api.instance
 end
-
