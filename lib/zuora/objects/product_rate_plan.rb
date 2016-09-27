@@ -8,7 +8,8 @@ module Zuora::Objects
     validates_length_of :name, :maximum => 100, :allow_nil => true
 
     define_attributes do
-      read_only :updated_by_id, :updated_date, :created_by_id, :created_date
+      read_only :updated_by_id, :updated_date, :created_by_id, :created_date, :active_currencies
+      defer :active_currencies
     end
   end
 end
