@@ -37,7 +37,7 @@ module Zuora
     # @return [Zuora::Config]
     attr_accessor :config
 
-    PRODUCTION_WSDL = File.expand_path('../../../wsdl/production/zuora.a.38.0.wsdl', __FILE__)
+    PRODUCTION_WSDL = File.expand_path('../../../wsdl/production/zuora.a.81.0.wsdl', __FILE__)
     SANDBOX_WSDL    = File.expand_path('../../../wsdl/sandbox/zuora.a.38.0.wsdl', __FILE__)
 
     # Is this an authenticated session?
