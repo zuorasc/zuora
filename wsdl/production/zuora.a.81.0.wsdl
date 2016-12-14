@@ -81,6 +81,7 @@
 							<element minOccurs="0" name="Currency" nillable="true" type="string" />
 							<element minOccurs="0" name="CustomerServiceRepName" nillable="true" type="string" />
 							<element minOccurs="0" name="DattoClientSubscriptionId__c" nillable="true" type="string" />
+							<element minOccurs="0" name="DattoDomain__c" nillable="true" type="string" />
 							<element minOccurs="0" name="DattoPartnerId__c" nillable="true" type="string" />
 							<element minOccurs="0" name="DefaultPaymentMethodId" nillable="true" type="zns:ID" />
 							<element minOccurs="0" name="InvoiceDeliveryPrefsEmail" nillable="true" type="boolean" />
