@@ -53,7 +53,7 @@ All additional requirements for development should be referenced in the provided
       $ ZUORA_USER=login ZUORA_PASS=password rake spec:integrations
 
 ## Support & Maintenance
-  This library currently supports Zuora's SOAP API version 38.
+  This library currently supports Zuora's SOAP API version 81.
 
 ## Contributors
   * Josh Martin <josh.martin@wildfireapp.com>
