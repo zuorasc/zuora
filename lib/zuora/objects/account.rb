@@ -20,7 +20,7 @@ module Zuora::Objects
     define_attributes do
       read_only :balance, :created_date, :credit_balance, :last_invoice_date,
                 :parent_id, :total_invoice_balance, :updated_date,
-                :created_by_id, :last_invoice_date, :updated_by_id, :datto_client_subscription_id
+                :created_by_id, :last_invoice_date, :updated_by_id
 
       defaults :auto_pay => false,
                :currency => 'USD',
