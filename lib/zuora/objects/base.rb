@@ -50,8 +50,8 @@ module Zuora::Objects
 
     def self.unselectable_attributes
       class_variable_get(:@@complex_attributes).keys +
-          class_variable_get(:@@write_only_attributes) +
-          class_variable_get(:@@deferred_attributes)
+      class_variable_get(:@@write_only_attributes) +
+      class_variable_get(:@@deferred_attributes)
     end
 
     def self.namespace(uri)

@@ -91,12 +91,12 @@ module Zuora
           z = tdefs.find{|d| d[0] == [klass, ref] }
           if z
             case z[1]
-              when 'integer', 'int' then
-                attrs[a] = v.nil? ? nil : v.to_i
-              when 'decimal' then
-                attrs[a] = v.nil? ? nil : BigDecimal(v.to_s)
-              when 'float', 'double' then
-                attrs[a] = v.nil? ? nil : v.to_f
+            when 'integer', 'int' then
+              attrs[a] = v.nil? ? nil : v.to_i
+            when 'decimal' then
+              attrs[a] = v.nil? ? nil : BigDecimal(v.to_s)
+            when 'float', 'double' then
+              attrs[a] = v.nil? ? nil : v.to_f
             end
           end
         end
@@ -117,14 +117,14 @@ module Zuora
           @model.send(scope).each do |object|
             td.__send__(zns, scope_element, 'xsi:type' => "#{ons}:#{scope_element}") do
               case action
-                when :create
-                  object.to_hash.each do |k,v|
-                    td.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
-                  end
-                when :update
-                  object.to_hash.reject{|k,v| object.read_only_attributes.include?(k) || object.restrain_attributes.include?(k) }.each do |k,v|
-                    td.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
-                  end
+              when :create
+                object.to_hash.each do |k,v|
+                  td.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
+                end
+              when :update
+                object.to_hash.reject{|k,v| object.read_only_attributes.include?(k) || object.restrain_attributes.include?(k) }.each do |k,v|
+                  td.__send__(ons, k.to_s.zuora_camelize.to_sym, v) unless v.nil?
+                end
               end
             end
           end
