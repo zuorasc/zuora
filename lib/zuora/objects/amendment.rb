@@ -55,7 +55,7 @@ module Zuora::Objects
     # Implementation adapted from jmoline/zuora 54cdde65a5de761162cbc6bbdd930082349582fb
     def generate_amend_options(builder)
       amend_options.each do |k,v|
-        builder.__send__(zns, k.to_s.camelize.to_sym, v)
+        builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
       end
     end
   end

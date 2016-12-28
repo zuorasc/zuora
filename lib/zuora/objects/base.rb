@@ -78,14 +78,14 @@ module Zuora::Objects
     # is not supported as it requires an actual db connection to
     # generate the sql queries. This may be overcome in the future.
     def self.where(where)
-      keys = (attributes - unselectable_attributes).map(&:to_s).map(&:camelcase)
+      keys = (attributes - unselectable_attributes).map(&:to_s).map(&:zuora_camelize)
       where_clause = where
 
       if where.is_a?(Hash)
         parts = []
 
         where.each do |k, v|
-          attribute = k.to_s.camelcase
+          attribute = k.to_s.zuora_camelize
 
           if v.kind_of?(Array)
             disjunction = v.join("' or #{attribute} = '")
