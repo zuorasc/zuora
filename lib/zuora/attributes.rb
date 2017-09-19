@@ -51,7 +51,8 @@ module Zuora
                 @#{scope} = #{scope}_without_complex
               end
             end
-            alias_method_chain :#{scope}, :complex
+            alias_method :#{scope}_without_complex, :#{scope}
+            alias_method :#{scope}, :#{scope}_with_complex
           EVAL
         end
       end
