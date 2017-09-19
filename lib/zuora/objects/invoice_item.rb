@@ -10,7 +10,7 @@ module Zuora::Objects
 
     validates_length_of :accounting_code, :maximum => 255, :allow_nil => true
     validates_numericality_of :charge_amount
-    validates_datetime_of :charge_date
+    # validates_datetime_of :charge_date
     validates_length_of :charge_name, :maximum => 50, :allow_nil => true
     validates_length_of :created_by_id, :maximum => 32, :allow_nil => true
     validates_inclusion_of :processing_type, :in => [0,1,2,3], :allow_nil => true
@@ -18,9 +18,9 @@ module Zuora::Objects
     validates_length_of :product_name, :maximum => 255
     validates_numericality_of :quantity, :allow_nil => true
     validates_length_of :rev_rec_code, :maximum => 70
-    validates_datetime_of :rev_rec_start_date, :allow_nil => true
-    validates_datetime_of :service_end_date, :allow_nil => true
-    validates_datetime_of :service_start_date
+    # validates_datetime_of :rev_rec_start_date, :allow_nil => true
+    # validates_datetime_of :service_end_date, :allow_nil => true
+    # validates_datetime_of :service_start_date
     validates_length_of :sku, :maximum => 255
     validates_numericality_of :unit_price
     validates_length_of :uom, :maximum => 255
@@ -30,6 +30,7 @@ module Zuora::Objects
       read_only :charge_description, :charge_name, :charge_number, :created_by_id, :created_date,
         :invoice_id, :product_description, :quantity, :subscription_number,
         :updated_by_id, :updated_date
+      deferred_attributes :product_rate_plan_charge_id
     end
   end
 end

@@ -10,6 +10,75 @@ describe Zuora::Objects::SubscribeRequest do
     end
   end
 
+  describe "#product_rate_plan=" do
+    it "should assign product_rate_plans as an array containing the object" do
+      MockResponse.responds_with(:payment_method_credit_card_find_success) do
+        @product_rate_plan = Zuora::Objects::ProductRatePlan.find('stub')
+      end
+      request = Zuora::Objects::SubscribeRequest.new
+      request.product_rate_plan = @product_rate_plan
+      request.product_rate_plans.should eql [@product_rate_plan]
+    end
+  end
+
+  describe "validations" do
+    describe "#must_have_usable" do
+      context "on account (being a reasonable representation of non-array objects)" do
+        before do
+          @account = Zuora::Objects::Account.new
+          @request = Zuora::Objects::SubscribeRequest.new(:account => @account)
+        end
+
+        it "should add errors when there are problems with account" do
+          @account.should_receive(:valid?).and_return(false)
+          @request.must_have_usable(:account)
+          @request.errors[:account].should include("is invalid")
+        end
+
+        it "should not add errors when there are no problems with account" do
+          @account.should_receive(:valid?).and_return(true)
+          @request.must_have_usable(:account)
+          @request.errors[:account].should be_blank
+        end
+      end
+
+      context "on product_rate_plans (being an array pbject)" do
+        before do
+          @rate_plan1 = Zuora::Objects::ProductRatePlan.new
+          @rate_plan2 = Zuora::Objects::ProductRatePlan.new
+          @request = Zuora::Objects::SubscribeRequest.new(:product_rate_plans => [@rate_plan1, @rate_plan2])
+        end
+
+        it "should add errors when there are no rate plans" do
+          @request.product_rate_plans = nil
+          @request.must_have_usable(:product_rate_plans)
+          @request.errors[:product_rate_plans].should include("must be provided")
+        end
+
+        it "should add errors when there are problems with the first rate plan" do
+          @rate_plan1.should_receive(:valid?).and_return(false)
+          @rate_plan2.should_receive(:valid?).and_return(true)
+          @request.must_have_usable(:product_rate_plans)
+          @request.errors[:product_rate_plans].should include("is invalid")
+        end
+
+        it "should add errors when there are problems with the second rate plan" do
+          @rate_plan1.should_receive(:valid?).and_return(true)
+          @rate_plan2.should_receive(:valid?).and_return(false)
+          @request.must_have_usable(:product_rate_plans)
+          @request.errors[:product_rate_plans].should include("is invalid")
+        end
+
+        it "should not add errors when there are no problems with the rate plans" do
+          @rate_plan1.should_receive(:valid?).and_return(true)
+          @rate_plan2.should_receive(:valid?).and_return(true)
+          @request.must_have_usable(:product_rate_plans)
+          @request.errors[:product_rate_plans].should be_blank
+        end
+      end
+    end
+  end
+
   describe "generating a request" do
     before do
       MockResponse.responds_with(:account_find_success) do
@@ -25,7 +94,7 @@ describe Zuora::Objects::SubscribeRequest do
       end
 
       MockResponse.responds_with(:payment_method_credit_card_find_success) do
-        subject.product_rate_plan = Zuora::Objects::ProductRatePlan.find('stub')
+        subject.product_rate_plans = [Zuora::Objects::ProductRatePlan.find('stub')]
       end
 
       subject.subscription = FactoryGirl.build(:subscription)
@@ -34,7 +103,8 @@ describe Zuora::Objects::SubscribeRequest do
     it "provides properly formatted xml when using existing objects" do
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
       end
 
       xml = Zuora::Api.instance.last_request
@@ -50,35 +120,13 @@ describe Zuora::Objects::SubscribeRequest do
       xml.should_not have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{ons}:SubscribeOptions")
     end
 
-    it "provides properly formatted xml when using existing objects or references" do
-      MockResponse.responds_with(:subscribe_request_success) do
-        # We should be able to generate the request with either the materialized ProductRatePlan or just its ID.
-        subject.product_rate_plan = nil
-        subject.product_rate_plan_id = '4028e48834aa10a30134c50f40901ea7'
-
-        subject.should be_valid
-        subject.create.should == true
-      end
-
-      xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:Account/#{ons}:Id").
-                     with_value('4028e488348752ce0134876a25867cb2')
-      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:PaymentMethod/#{ons}:Id").
-                     with_value('4028e48834aa10a30134c50f40901ea7')
-      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:BillToContact/#{ons}:Id").
-                     with_value('4028e4873491cc770134972e75746e4c')
-      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscriptionData/#{zns}:Subscription")
-      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscriptionData/#{zns}:RatePlanData/#{zns}:RatePlan/#{ons}:ProductRatePlanId").
-                     with_value('4028e48834aa10a30134c50f40901ea7')
-      xml.should_not have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{ons}:SubscribeOptions")
-    end
-
     it "provides full account info when new object" do
       subject.account = FactoryGirl.build(:account)
 
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
       end
 
       xml = Zuora::Api.instance.last_request
@@ -93,7 +141,8 @@ describe Zuora::Objects::SubscribeRequest do
 
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
       end
 
       xml = Zuora::Api.instance.last_request
@@ -107,7 +156,8 @@ describe Zuora::Objects::SubscribeRequest do
 
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
       end
 
       xml = Zuora::Api.instance.last_request
@@ -121,7 +171,8 @@ describe Zuora::Objects::SubscribeRequest do
     it "handles applying subscribe failures messages" do
       MockResponse.responds_with(:subscribe_request_failure) do
         subject.should be_valid
-        subject.create.should == false
+        sub_resp = subject.create
+        sub_resp[:success].should == false
         subject.errors[:base].should include('Initial Term should be greater than zero')
       end
     end
@@ -130,18 +181,20 @@ describe Zuora::Objects::SubscribeRequest do
       MockResponse.responds_with(:subscribe_request_success) do
         subject.subscribe_options = {:generate_invoice => true, :process_payments => true}
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
       end
 
       xml = Zuora::Api.instance.last_request
-      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscribeOptions/#{ons}:GenerateInvoice").
+      xml.should have_xml("//env:Body/#{zns}:subscribe/#{zns}:subscribes/#{zns}:SubscribeOptions/#{zns}:GenerateInvoice").
         with_value(true)
     end
 
     it "applies valid response data to the proper nested objects and resets dirty" do
       MockResponse.responds_with(:subscribe_request_success) do
         subject.should be_valid
-        subject.create.should == true
+        sub_resp = subject.create
+        sub_resp[:success].should == true
         subject.subscription.should_not be_changed
         subject.subscription.should_not be_new_record
       end

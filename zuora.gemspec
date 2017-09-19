@@ -13,16 +13,19 @@ Gem::Specification.new do |s|
   s.description = %q{Zuora - Easily integrate the Zuora SOAP API using ruby objects.}
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
   s.extra_rdoc_files = [ "README.md" ]
+  s.licenses = ["Apache 2.0"]
+  s.extra_rdoc_files = ["README.md"]
 
-  s.add_runtime_dependency(%q<savon>, [">= 0.9.8"])
-  s.add_runtime_dependency(%q<activesupport>, [">= 4.0.0"])
-  s.add_runtime_dependency(%q<activemodel>, [">= 4.0.0"])
+  s.add_runtime_dependency(%q<wasabi>, ["~> 3.2.0"])
+  s.add_runtime_dependency(%q<savon>, ["~> 2.3.0"])
+  s.add_runtime_dependency(%q<activesupport>, [">= 3.0.0"])
+  s.add_runtime_dependency(%q<activemodel>, [">= 3.0.0"])
   s.add_runtime_dependency(%q<libxml4r>, ['~> 0.2.6'])
 
-  s.add_development_dependency(%q<rake>, ["~> 0.8.7"])
+
+  s.add_development_dependency(%q<rake>, ["~> 10.1.0"])
   s.add_development_dependency(%q<guard-rspec>, ["~> 0.6.0"])
   s.add_development_dependency(%q<artifice>, ["~> 0.6.0"])
   s.add_development_dependency(%q<yard>, ["~> 0.7.5"])
@@ -31,5 +34,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<factory_girl>, ["~> 2.6.4"])
   s.add_development_dependency(%q<appraisal>, ["~> 0.4.1"])
   s.add_development_dependency(%q<sqlite3>, ["~> 1.3.0"])
-  s.add_development_dependency(%q<minitest>)
+  s.add_development_dependency('byebug')
+  s.add_development_dependency('test-unit')
 end

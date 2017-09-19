@@ -13,8 +13,8 @@ module Zuora::Objects
     validates_presence_of :subscription_id, :unless => :subscription_number
     validates_length_of :subscription_number, :maximum => 255, :unless => :subscription_id
 
-    validates_datetime_of :start_date_time, :allow_nil => true
-    validates_datetime_of :end_date_time, :allow_nil => true
+    # validates_datetime_of :start_date_time, :allow_nil => true
+    # validates_datetime_of :end_date_time, :allow_nil => true
 
     validates_presence_of :description, :maximum => 255, :allow_nil => true
     validates_numericality_of :quantity

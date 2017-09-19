@@ -5,7 +5,7 @@ module Zuora::Objects
     validates_inclusion_of :category, :in => ['DefaultCatalog'], :allow_nil => true
     validates_length_of :description, :maximum => 500, :allow_nil => true
 
-    validates_date_of :effective_start_date, :effective_end_date
+    # validates_date_of :effective_start_date, :effective_end_date
     validates_length_of :name, :maximum => 100, :allow_nil => true
     validates_length_of :sku, :maximum => 50, :allow_nil => true
 

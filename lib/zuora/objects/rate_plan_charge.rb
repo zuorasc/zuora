@@ -7,10 +7,10 @@ module Zuora::Objects
     belongs_to :original, :class_name => 'RatePlanCharge'
     belongs_to :product_rate_plan_charge
     belongs_to :rate_plan
-    
+
     has_many :rate_plan_charge_tiers
 
-    CHARGE_MODELS = [ 
+    CHARGE_MODELS = [
       "Flat Fee Pricing",
       "Per Unit Pricing",
       "Overage Pricing",
@@ -31,7 +31,7 @@ module Zuora::Objects
     validates_numericality_of :bill_cycle_day, :only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 31, :allow_nil => true
     validates_inclusion_of    :bill_cycle_type, :allow_nil => true, :in => %w(DefaultFromCustomer SpecificDayofMonth SubscriptionStartDay ChargeTriggerDay)
     validates_inclusion_of    :billing_period_alignment, :allow_nil => true, :in => %w(AlignToCharge AlignToSubscriptionStart AlignToTermStart)
-    validates_datetime_of     :charged_through_date, :allow_nil => true
+    # validates_datetime_of     :charged_through_date, :allow_nil => true
     validates_inclusion_of    :charge_model, :allow_nil => true, :in => CHARGE_MODELS
     validates_length_of       :charge_number, :maximum => 50  # String
     validates_inclusion_of    :charge_type, :in => %w(OneTime Recurring Usage)
@@ -41,8 +41,8 @@ module Zuora::Objects
     validates_numericality_of :discount_percentage, :allow_nil => true, :greater_than => 0
     validates_numericality_of :dmrc, :allow_nil => true
     validates_numericality_of :dtcv, :allow_nil => true
-    validates_datetime_of     :effective_end_date
-    validates_datetime_of     :effective_start_date
+    # validates_datetime_of     :effective_end_date
+    # validates_datetime_of     :effective_start_date
     validates_numericality_of :included_units, :greater_than => 0, :if => Proc.new { |rpc| ['Overage','Tiered with Overage Pricing'].include?(rpc.charge_model) }
     validates_inclusion_of    :is_last_segment, :in => [true, false], :allow_nil => true
     validates_numericality_of :mrr, :allow_nil => true
@@ -54,12 +54,12 @@ module Zuora::Objects
     validates_inclusion_of    :overage_unused_units_credit_option, :allow_nil => true, :in => %w(NoCredit CreditBySpecificRate), :if => Proc.new { |rpc| ['Overage','Tiered with Overage Pricing'].include?(rpc.charge_model) }
     validates_numericality_of :price, :allow_nil => true
     validates_numericality_of :price_increase_percentage, :less_than_or_equal_to => 100, :greater_than_or_equal_to => -100, :allow_nil => true
-    validates_datetime_of     :processed_through_date, :allow_nil => true
+    # validates_datetime_of     :processed_through_date, :allow_nil => true
     validates_numericality_of :quantity, :allow_nil => true, :greater_than_or_equal_to => 0
     validates_numericality_of :rollover_balance, :allow_nil => true
     validates_numericality_of :segment, :integer_only => true, :greater_than_or_equal_to => 1
     validates_numericality_of :tcv
-    validates_datetime_of     :trigger_date, :allow_nil => true
+    # validates_datetime_of     :trigger_date, :allow_nil => true
     validates_inclusion_of    :trigger_event, :in => %w(ContractEffective CustomerAcceptance ServiceActivation SpecificDate)
     validates_numericality_of :unused_units_credit_rates, :if => Proc.new { |rpc| ['Overage','Tiered with Overage Pricing'].include?(rpc.charge_model) }
     validates_numericality_of :up_to_periods, :integer_only => true, :allow_nil => true

@@ -6,22 +6,20 @@ module Zuora::Objects
     validates_length_of :name, :maximum => 100
     validates_inclusion_of :auto_renew, :in => [true, false], :allow_nil => true
     validates_length_of :code, :maximum => 50, :allow_nil => true
-    validates_datetime_of :contract_effective_date, :allow_nil => true
-    validates_datetime_of :customer_acceptance_date, :allow_nil => true
-    validates_datetime_of :effective_date, :allow_nil => true
-    validates_datetime_of :service_activation_date, :if => Proc.new { |a| a.status == 'PendingAcceptance' }
+    # validates_datetime_of :contract_effective_date, :allow_nil => true
+    # validates_datetime_of :customer_acceptance_date, :allow_nil => true
+    # validates_datetime_of :effective_date, :allow_nil => true
+    # validates_datetime_of :service_activation_date, :if => Proc.new { |a| a.status == 'PendingAcceptance' }
     validates_length_of :description, :maximum => 500, :allow_nil => true
     validates_numericality_of :initial_term, :if => Proc.new { |a| a.type == 'TermsAndConditions' }
     validates_numericality_of :renewal_term, :if => Proc.new { |a| a.type == 'TermsAndConditions' }
-    validates_date_of :term_start_date, :if => Proc.new { |a| a.type == 'TermsAndConditions' }
+    # validates_date_of :term_start_date, :if => Proc.new { |a| a.type == 'TermsAndConditions' }
     validates_presence_of :destination_account_id, :if => Proc.new {|a| a.type == 'OwnerTransfer' }
     validates_presence_of :destination_invoice_owner_id, :if => Proc.new {|a| a.type == 'OwnerTransfer' }
     validates_inclusion_of :status, :in => ["Completed", "Cancelled", "Draft", "Pending Acceptance", "Pending Activation"]
     validates_inclusion_of :term_type, :in => ['TERMED', 'EVERGREEN'], :allow_nil => true
     validates_inclusion_of :type, :in => ['Cancellation', 'NewProduct', 'OwnerTransfer', 'RemoveProduct', 'Renewal', 'UpdateProduct', 'TermsAndConditions']
     validates_presence_of :rate_plan_data, :if => Proc.new { |a| ['NewProduct', 'RemoveProduct', 'UpdateProduct'].include?(a.type) }
-
-    store_accessors :amend_options
 
     attr_accessor :amendment_ids
     attr_accessor :invoice_id
@@ -49,13 +47,6 @@ module Zuora::Objects
       else
         self.errors.add(:base, result[:errors][:message])
         return false
-      end
-    end
-
-    # Implementation adapted from jmoline/zuora 54cdde65a5de761162cbc6bbdd930082349582fb
-    def generate_amend_options(builder)
-      amend_options.each do |k,v|
-        builder.__send__(zns, k.to_s.zuora_camelize.to_sym, v)
       end
     end
   end

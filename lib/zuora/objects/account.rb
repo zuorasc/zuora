@@ -1,6 +1,5 @@
 module Zuora::Objects
   class Account < Base
-    include ActiveModel
     has_many :contacts
     has_many :payment_methods
     has_many :subscriptions
@@ -31,4 +30,3 @@ module Zuora::Objects
     end
   end
 end
-

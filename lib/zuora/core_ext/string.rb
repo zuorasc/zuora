@@ -7,11 +7,16 @@ module Zuora
       end unless method_defined?(:base_name)
 
       def zuora_camelize
-        self.include?('__c') ? self.chomp('__c').camelize + '__c' : self.camelize
-      end
+        if match(/__c$/)
+          self.gsub("__c","").zuora_camelize + "__c"
+        else
+          camelize
+        end
+      end unless method_defined?(:zuora_camelize)
 
     end
   end
 end
 
 String.send :include, Zuora::CoreExt::String
+

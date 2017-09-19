@@ -51,7 +51,8 @@ module Zuora
                 @#{scope} = #{scope}_without_complex
               end
             end
-            alias_method_chain :#{scope}, :complex
+            alias_method :#{scope}_without_complex, :#{scope}
+            alias_method :#{scope}, :#{scope}_with_complex
           EVAL
         end
       end
@@ -135,7 +136,7 @@ module Zuora
       def inherited(subclass)
         super
         xpath = "//xs:complexType[@name='#{subclass.remote_name}']//xs:sequence/xs:element"
-        document = Zuora::Api.instance.client.wsdl.parser.instance_variable_get('@document')
+        document = Zuora::Api.instance.wsdl.parser.instance_variable_get('@document')
         q = document.xpath(xpath, 's0' => 'http://schemas.xmlsoap.org/wsdl/', 'xs' => 'http://www.w3.org/2001/XMLSchema')
         wsdl_attrs = (q.map{|e| e.attributes['name'].value.underscore.to_sym }) << :id
         subclass.send(:class_variable_set, :@@wsdl_attributes,  wsdl_attrs)

@@ -55,7 +55,7 @@ module Zuora::Objects
     end
 
     def self.namespace(uri)
-      Zuora::Api.instance.client.soap.namespace_by_uri(uri)
+      Zuora::Api.instance.client.operation(:query).build.send(:namespace_by_uri, uri)
     end
 
     def self.zns
@@ -74,33 +74,34 @@ module Zuora::Objects
       self.class.ons
     end
 
+    # retrieve all of the records
+    def self.all
+      keys = (attributes - unselectable_attributes).map(&:to_s).map(&:zuora_camelize)
+      sql = "select #{keys.join(', ')} from #{remote_name}"
+ 
+      result = self.connector.query(sql)
+ 
+      generate(result.to_hash, :query_response)
+    end
+
     # locate objects using a custom where clause, currently arel
     # is not supported as it requires an actual db connection to
     # generate the sql queries. This may be overcome in the future.
     def self.where(where)
       keys = (attributes - unselectable_attributes).map(&:to_s).map(&:zuora_camelize)
-      where_clause = where
-
       if where.is_a?(Hash)
-        parts = []
-
-        where.each do |k, v|
-          attribute = k.to_s.zuora_camelize
-
-          if v.kind_of?(Array)
-            disjunction = v.join("' or #{attribute} = '")
-            parts << "#{attribute} = '#{disjunction}'"
-          else
-            parts << "#{attribute} = '#{v}'"
-          end
-        end
-
-        where_clause = parts.sort.join(' and ')
+        # FIXME: improper inject usage.
+        where = where.inject([]){|t,v| t << "#{v[0].to_s.zuora_camelize} = '#{v[1]}'"}.sort.join(' and ')
       end
+      sql = "select #{keys.join(', ')} from #{remote_name} where #{where}"
 
-      sql = "select #{keys.join(', ')} from #{remote_name} where #{where_clause}"
       result = self.connector.query(sql)
 
+      generate(result.to_hash, :query_response)
+    end
+
+    def self.query(query_string)
+      result = self.connector.query(query_string)
       generate(result.to_hash, :query_response)
     end
 
